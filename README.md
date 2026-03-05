@@ -1,4 +1,4 @@
-# 🧠 ContextForge — LLM Context & Token Handling Toolkit
+# ContextForge — LLM Context & Token Handling Toolkit
 
 Manage LLM context windows, count tokens accurately, chunk documents intelligently, and compress prompts — solving the real pain-points of human–LLM interactions.
 
@@ -7,18 +7,18 @@ Manage LLM context windows, count tokens accurately, chunk documents intelligent
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-teal.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## 🌟 Features
+## Features
 
-- ✅ **Multi-Provider Token Counter** — Accurate counting for OpenAI (tiktoken), Anthropic, Google, and Llama models
-- ✅ **Smart Document Chunking** — Sentence, paragraph, semantic, and code-aware splitting with overlap
-- ✅ **Priority-Based Context Assembly** — Tag blocks with priorities; the manager greedily packs the window
-- ✅ **Context Compression** — Extractive, truncate, middle-out, and map-reduce strategies
-- ✅ **Conversation Manager** — Auto-trim old messages while preserving recent context
-- ✅ **Cost Estimation** — Estimate API costs before making calls
-- ✅ **REST API** — FastAPI endpoints for all features
-- ✅ **CLI** — Command-line interface for quick operations
+- **Multi-Provider Token Counter** — Accurate counting for OpenAI (tiktoken), Anthropic, Google, and Llama models
+- **Smart Document Chunking** — Sentence, paragraph, semantic, and code-aware splitting with overlap
+- **Priority-Based Context Assembly** — Tag blocks with priorities; the manager greedily packs the window
+- **Context Compression** — Extractive, truncate, middle-out, and map-reduce strategies
+- **Conversation Manager** — Auto-trim old messages while preserving recent context
+- **Cost Estimation** — Estimate API costs before making calls
+- **REST API** — FastAPI endpoints for all features
+- **CLI** — Command-line interface for quick operations
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -158,7 +158,7 @@ curl -X POST "http://localhost:8000/tokens/count" \
   -d '{"text": "Hello world!", "model": "gpt-4o"}'
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 contextforge/
@@ -185,7 +185,7 @@ contextforge/
 └── requirements.txt
 ```
 
-## 🤖 Supported Models
+## Supported Models
 
 | Provider | Models | Context Window |
 |---|---|---|
@@ -195,7 +195,7 @@ contextforge/
 | **Llama** | llama-3-8b, llama-3-70b | 8K |
 | **Custom** | Register your own via `ModelRegistry.register()` | Any |
 
-## 🔧 CLI Usage
+## CLI Usage
 
 ```bash
 # Count tokens
@@ -220,7 +220,7 @@ python main.py --api --port 8000
 python main.py --demo
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 pytest tests/ -v
@@ -232,15 +232,15 @@ Run with coverage:
 pytest tests/ -v --cov=src --cov-report=html
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [tiktoken](https://github.com/openai/tiktoken) for OpenAI tokenisation
 - [FastAPI](https://fastapi.tiangolo.com/) for the REST API framework
