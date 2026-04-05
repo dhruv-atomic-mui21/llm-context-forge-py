@@ -1,246 +1,262 @@
-# ContextForge — LLM Context & Token Handling Toolkit
+<div align="center">
+  <h1>🔥 ContextForge</h1>
+  <p><b>Production-Grade LLMOps Infrastructure for Context Window Management</b></p>
+  <p><i>Deterministic token counting · Intelligent chunking · Priority-based context assembly · Cost estimation — the foundation every AI application needs.</i></p>
 
-Manage LLM context windows, count tokens accurately, chunk documents intelligently, and compress prompts — solving the real pain-points of human–LLM interactions.
+  [![Tests](https://github.com/dhruv-atomic-mui21/contextforge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/contextforge/actions)
+  [![PyPI](https://img.shields.io/pypi/v/contextforge.svg)](https://pypi.org/project/contextforge/)
+  [![Python](https://img.shields.io/pypi/pyversions/contextforge.svg)](https://pypi.org/project/contextforge/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+  [![Downloads](https://img.shields.io/pypi/dm/contextforge.svg)](https://pypi.org/project/contextforge/)
+</div>
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![tiktoken](https://img.shields.io/badge/tiktoken-0.5+-orange.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-teal.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+---
 
-## Features
+## Why ContextForge?
 
-- **Multi-Provider Token Counter** — Accurate counting for OpenAI (tiktoken), Anthropic, Google, and Llama models
-- **Smart Document Chunking** — Sentence, paragraph, semantic, and code-aware splitting with overlap
-- **Priority-Based Context Assembly** — Tag blocks with priorities; the manager greedily packs the window
-- **Context Compression** — Extractive, truncate, middle-out, and map-reduce strategies
-- **Conversation Manager** — Auto-trim old messages while preserving recent context
-- **Cost Estimation** — Estimate API costs before making calls
-- **REST API** — FastAPI endpoints for all features
-- **CLI** — Command-line interface for quick operations
+Every production AI application eventually hits the same infrastructure problems:
 
-## Quick Start
+| Problem | Impact | ContextForge Solution |
+|---------|--------|-----------------------|
+| 🎯 Context window overflow | Silent failures, truncated responses | Priority-based assembly with overflow tracking |
+| 📊 Inaccurate token counting | Budget overruns, dropped requests | Deterministic counting via tiktoken + heuristic fallbacks |
+| 🔄 Naive text splitting | Broken semantics, degraded LLM reasoning | 5 chunking strategies (sentence, paragraph, semantic, code, fixed) |
+| 💸 Unpredictable API costs | Surprise bills, no cost governance | Pre-flight cost estimation across 15+ models |
+| 🗜️ Oversized prompts | Wasted tokens, slow responses | 4 compression strategies (extractive, truncate, middle-out, map-reduce) |
 
-### Installation
+## Installation
 
 ```bash
-git clone https://github.com/yourusername/contextforge.git
-cd contextforge
-pip install -r requirements.txt
+pip install contextforge
 ```
+
+With API server support:
+```bash
+pip install "contextforge[api]"
+```
+
+## Quick Start
 
 ### Token Counting
 
 ```python
-from src.tokenizer import TokenCounter
+from contextforge import TokenCounter
 
 counter = TokenCounter("gpt-4o")
-
-# Count tokens
 tokens = counter.count("Hello, world!")
-print(f"Tokens: {tokens}")
+print(f"Tokens: {tokens}")  # Tokens: 4
 
-# Check if text fits in context window
-fits = counter.fits_in_window("Your prompt here", max_tokens=4096)
+# Check context window fit
+fits = counter.fits_in_window("Your prompt...", reserve_output=500)
 
-# Estimate cost
-cost = counter.estimate_cost("Your prompt", model="gpt-4o", direction="input")
+# Estimate cost before sending
+cost = counter.estimate_cost("Your prompt...", direction="input")
 print(f"Cost: ${cost:.6f}")
-
-# Count chat messages (ChatML-aware)
-messages = [
-    {"role": "system", "content": "You are helpful."},
-    {"role": "user", "content": "Hello!"},
-]
-total = counter.count_messages(messages)
 ```
 
-### Smart Chunking
+### Intelligent Chunking
 
 ```python
-from src.chunker import DocumentChunker, ChunkStrategy
+from contextforge import DocumentChunker, ChunkStrategy
 
-chunker = DocumentChunker()
+chunker = DocumentChunker("gpt-4o")
 
-# Paragraph-aware chunking
-chunks = chunker.chunk(long_text, ChunkStrategy.PARAGRAPH, max_tokens=500)
+# Chunk respecting paragraph boundaries
+chunks = chunker.chunk(
+    long_document,
+    strategy=ChunkStrategy.PARAGRAPH,
+    max_tokens=500,
+    overlap_tokens=50,
+)
 
-# Code-aware chunking
-code_chunks = chunker.chunk_code(source_code, language="python", max_tokens=500)
-
-# Markdown-aware chunking
-md_chunks = chunker.chunk_markdown(readme_text, max_tokens=500)
-
-for chunk in chunks:
-    print(f"Chunk {chunk.index}: {chunk.token_count} tokens")
+# Specialized chunkers
+code_chunks = chunker.chunk_code(source_code, language="python")
+md_chunks = chunker.chunk_markdown(readme_text)
 ```
 
-### Context Window Management
+### Priority-Based Context Assembly
+
+The core pattern for RAG applications — guarantee critical context fits while gracefully dropping lower-priority content:
 
 ```python
-from src.context import ContextWindow, Priority
+from contextforge import ContextWindow, Priority
 
-window = ContextWindow()
+window = ContextWindow("gpt-4o")
 
-# Add blocks with priorities
-window.add_block("You are a helpful assistant.", Priority.CRITICAL, "system")
-window.add_block("Project: Python web app using Flask.", Priority.HIGH, "project")
-window.add_block("Here is the full changelog...", Priority.LOW, "changelog")
-window.add_block("Optional: code style guide...", Priority.OPTIONAL, "style")
+# System instructions — always included
+window.add_block("You are a legal assistant.", Priority.CRITICAL, "system")
 
-# Assemble — highest priority first, respecting token limit
-context = window.assemble(max_tokens=4096)
+# User query — high priority
+window.add_block("What is the statute of limitations?", Priority.HIGH, "query")
 
-# Check what was included/excluded
+# RAG search results — included if space permits
+window.add_block(search_result_1, Priority.MEDIUM, "rag_1")
+window.add_block(search_result_2, Priority.LOW, "rag_2")
+
+# Assemble: packs highest-priority blocks first
+prompt = window.assemble(max_tokens=4096)
+
+# See what was included/dropped
 usage = window.usage()
-print(f"Included: {usage['included_tokens']} tokens")
-print(f"Excluded: {usage['excluded_tokens']} tokens")
+print(f"Included: {usage['num_included']} blocks ({usage['included_tokens']} tokens)")
+print(f"Dropped:  {usage['num_excluded']} blocks")
+```
+
+### Cost Estimation
+
+```python
+from contextforge import CostCalculator
+
+calc = CostCalculator("gpt-4o")
+
+# Single prompt cost
+cost = calc.estimate_prompt("Your prompt text here")
+print(f"Input cost: ${cost.usd:.6f}")
+
+# Compare models
+comparison = calc.compare_models(
+    texts=["Document 1...", "Document 2..."],
+    models=["gpt-4o", "gpt-4o-mini", "claude-3.5-sonnet", "gemini-flash"],
+)
+for model, analysis in comparison.items():
+    print(f"{model}: ${analysis.total_usd:.6f} for {analysis.total_tokens} tokens")
 ```
 
 ### Context Compression
 
 ```python
-from src.compressor import ContextCompressor, CompressionStrategy
+from contextforge import ContextCompressor, CompressionStrategy
 
-compressor = ContextCompressor()
+compressor = ContextCompressor("gpt-4o")
 
-# Extractive compression (keeps key sentences)
-result = compressor.compress(text, target_tokens=500, strategy=CompressionStrategy.EXTRACTIVE)
+# Extractive: keeps most important sentences via TF-IDF scoring
+result = compressor.compress(long_text, target_tokens=200)
 print(f"Compressed: {result.original_tokens} → {result.compressed_tokens} tokens")
 print(f"Savings: {result.savings_pct:.1f}%")
 
-# Middle-out (keeps start + end, removes middle)
-result = compressor.compress(text, target_tokens=500, strategy=CompressionStrategy.MIDDLE_OUT)
-
-# Compress conversation history
-compressed_msgs = compressor.compress_conversation(messages, target_tokens=2000)
+# Middle-out: preserves start and end, removes middle
+result = compressor.compress(log_text, target_tokens=300, strategy=CompressionStrategy.MIDDLE_OUT)
 ```
 
-### Conversation Manager
+### Conversation Management
 
 ```python
-from src.context import ConversationManager
+from contextforge import ConversationManager
 
-conv = ConversationManager("gpt-4o")
+manager = ConversationManager("gpt-4o")
 
-conv.add_message("system", "You are helpful.")
-conv.add_message("user", "What is Python?")
-conv.add_message("assistant", "Python is a programming language...")
-conv.add_message("user", "Tell me more.")
+manager.add_message("system", "You are a helpful Python tutor.")
+manager.add_message("user", "Explain decorators")
+manager.add_message("assistant", "Decorators are...")
+# ... many more turns ...
 
-# Auto-trim to fit in context window
-messages = conv.get_context(max_tokens=4096)
-print(conv.token_usage())
-```
-
-## 🖥️ API Server
-
-```bash
-python main.py --api --port 8000
-```
-
-### API Endpoints
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/` | GET | API info |
-| `/health` | GET | Health check |
-| `/tokens/count` | POST | Count tokens for text + model |
-| `/tokens/validate` | POST | Check if text fits in window |
-| `/chunk` | POST | Chunk text with strategy |
-| `/context/assemble` | POST | Assemble blocks by priority |
-| `/compress` | POST | Compress text to target tokens |
-
-### Example API Request
-
-```bash
-curl -X POST "http://localhost:8000/tokens/count" \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Hello world!", "model": "gpt-4o"}'
-```
-
-## Project Structure
-
-```
-contextforge/
-├── api/
-│   ├── __init__.py
-│   └── app.py              # FastAPI application
-├── src/
-│   ├── __init__.py
-│   ├── tokenizer.py        # Multi-provider token counter
-│   ├── chunker.py          # Intelligent document chunker
-│   ├── context.py          # Context window manager
-│   └── compressor.py       # Context compression engine
-├── tests/
-│   ├── test_tokenizer.py
-│   ├── test_chunker.py
-│   ├── test_context.py
-│   ├── test_compressor.py
-│   └── test_api.py
-├── .gitignore
-├── CONTRIBUTING.md
-├── LICENSE
-├── main.py                 # CLI entry point
-├── README.md
-└── requirements.txt
+# Auto-trim older messages to fit budget, preserving system prompt
+trimmed = manager.get_context(max_tokens=4096, preserve_system=True)
 ```
 
 ## Supported Models
 
-| Provider | Models | Context Window |
-|---|---|---|
-| **OpenAI** | gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-4, gpt-3.5-turbo | 8K – 128K |
-| **Anthropic** | claude-3-opus, claude-3.5-sonnet, claude-3-haiku | 200K |
-| **Google** | gemini-pro, gemini-flash | 1M |
-| **Llama** | llama-3-8b, llama-3-70b | 8K |
-| **Custom** | Register your own via `ModelRegistry.register()` | Any |
+| Provider | Models | Token Counting | Pricing |
+|----------|--------|:--------------:|:-------:|
+| **OpenAI** | GPT-4, GPT-4 Turbo, GPT-4o, GPT-4o-mini, GPT-3.5 Turbo | ✅ tiktoken | ✅ |
+| **Anthropic** | Claude 3 Opus, Claude 3.5 Sonnet, Claude 3 Haiku | ≈ estimate | ✅ |
+| **Google** | Gemini Pro, Gemini Flash | ≈ estimate | ✅ |
+| **Meta** | Llama 3 8B, Llama 3 70B | ≈ estimate | — |
+| **Mistral** | Mistral Large | ≈ estimate | ✅ |
+| **Cohere** | Command R+ | ≈ estimate | ✅ |
 
-## CLI Usage
+Register custom models:
+```python
+from contextforge import ModelRegistry, ModelInfo, TokenizerBackend
+
+ModelRegistry.register(ModelInfo(
+    name="my-fine-tuned-model",
+    backend=TokenizerBackend.OPENAI,
+    context_window=16_384,
+    encoding_name="cl100k_base",
+    input_cost_per_1k=0.002,
+    output_cost_per_1k=0.006,
+))
+```
+
+## CLI
 
 ```bash
 # Count tokens
-python main.py count "Hello world" --model gpt-4
+contextforge count "Hello world" --model gpt-4o
 
 # Chunk a document
-python main.py chunk document.txt --strategy sentence --max-tokens 500
+contextforge chunk document.md --strategy semantic --max-tokens 500
 
-# Assemble context from JSON blocks
-python main.py assemble blocks.json --max-tokens 4096
+# Estimate cost
+contextforge cost document.txt --model claude-3.5-sonnet
 
-# Compress text
-python main.py compress document.txt --target 1000 --strategy extractive
+# List all models
+contextforge models
 
-# List supported models
-python main.py models
+# Health check
+contextforge doctor
 
 # Start API server
-python main.py --api --port 8000
+contextforge serve --port 8000
 
-# Run demo
-python main.py --demo
+# Interactive demo
+contextforge demo
 ```
 
-## Testing
+## REST API
+
+Start the server and access interactive docs at `http://localhost:8000/docs`:
 
 ```bash
-pytest tests/ -v
+pip install "contextforge[api]"
+contextforge serve
 ```
 
-Run with coverage:
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | System health + version |
+| `/api/v1/tokens/count` | POST | Count tokens |
+| `/api/v1/tokens/validate` | POST | Check context window fit |
+| `/api/v1/chunks/` | POST | Chunk text |
+| `/api/v1/context/assemble` | POST | Priority-based assembly |
+| `/api/v1/compress/` | POST | Compress text |
+| `/api/v1/cost/estimate` | POST | Estimate cost |
+
+## Architecture
+
+```
+contextforge/
+├── models.py        # Model registry (15+ models, pricing, backends)
+├── tokenizer.py     # Multi-provider token counter (tiktoken + heuristics)
+├── chunker.py       # 5-strategy document chunker with overlap
+├── context.py       # Priority-based context assembly + conversation manager
+├── compressor.py    # 4-strategy compression engine (TF-IDF, middle-out, etc.)
+├── cost.py          # Cost estimation engine with model comparison
+├── cli/main.py      # Typer CLI with Rich output
+└── api/             # FastAPI server with versioned routes
+```
+
+## Docker
 
 ```bash
-pytest tests/ -v --cov=src --cov-report=html
+docker build -t contextforge .
+docker-compose up
+```
+
+## Development
+
+```bash
+git clone https://github.com/dhruv-atomic-mui21/contextforge.git
+cd contextforge
+pip install -e ".[dev]"
+pytest
 ```
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow guidelines.
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [tiktoken](https://github.com/openai/tiktoken) for OpenAI tokenisation
-- [FastAPI](https://fastapi.tiangolo.com/) for the REST API framework
+MIT — see [LICENSE](LICENSE).

@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contextforge"
+version = "0.1.0"
+description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+  { name = "Dhruv" }
+]
+keywords = [
+    "llm", "tokens", "tokenizer", "chunking",
+    "context-window", "context-management", "llmops",
+    "rag", "prompt-engineering", "openai", "anthropic",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "tiktoken>=0.5.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dhruv-atomic-mui21/contextforge"
+Repository = "https://github.com/dhruv-atomic-mui21/contextforge"
+Documentation = "https://github.com/dhruv-atomic-mui21/contextforge/tree/main/docs"
+"Bug Tracker" = "https://github.com/dhruv-atomic-mui21/contextforge/issues"
+Changelog = "https://github.com/dhruv-atomic-mui21/contextforge/releases"
+
+[project.scripts]
+contextforge = "contextforge.cli.main:app"
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.95.0",
+    "uvicorn>=0.21.0",
+    "pydantic>=2.0.0",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "pytest-benchmark",
+    "ruff",
+    "mypy",
+    "httpx>=0.24.0",
+    "fastapi>=0.95.0",
+    "uvicorn>=0.21.0",
+    "pydantic>=2.0.0",
+    "build",
+    "twine",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.setuptools.packages.find]
+include = ["contextforge*"]

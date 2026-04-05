@@ -1,43 +1,38 @@
 # Contributing to ContextForge
 
-Thank you for your interest in contributing! Here's how to get started.
+First off, thanks for taking the time to contribute!
 
 ## Development Setup
 
-```bash
-git clone https://github.com/yourusername/contextforge.git
-cd contextforge
-pip install -r requirements.txt
-```
+1. Fork and clone the repository.
+2. Install the package in development mode:
+   ```bash
+   pip install -e ".[dev]"
+   ```
+3. (Optional but recommended) Run tests to ensure everything works locally:
+   ```bash
+   pytest tests/
+   ```
 
-## Running Tests
+## Workflow
 
-```bash
-pytest tests/ -v
-```
+- Create a new branch for your feature or bugfix.
+- Make your changes.
+- Write tests for your changes.
+- Ensure all tests pass (`pytest tests/`).
+- Code must be formatted with `ruff` and pass type checking with `mypy`.
+  ```bash
+  ruff check contextforge/
+  mypy contextforge/
+  ```
+- Submit a Pull Request targeting the `main` branch.
 
 ## Code Style
 
-- Follow PEP 8
-- Add docstrings to all public classes and functions
-- Use type hints
+- We use `ruff` to enforce standard Python formatting.
+- Type hints are required for all new functions and classes.
+- Use docstrings for all public classes, methods, and functions. 
 
-## Pull Request Process
+## Releasing (Maintainers Only)
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Write tests for your changes
-4. Ensure all tests pass
-5. Submit a pull request
-
-## Areas for Contribution
-
-- Additional tokenizer backends (e.g., Mistral, Cohere)
-- New compression strategies
-- Performance optimizations
-- Documentation improvements
-- Bug reports and fixes
-
-## Reporting Issues
-
-Use GitHub Issues with a clear description, steps to reproduce, and expected vs. actual behavior.
+Our release process is automated via GitHub Actions. Merging a tag (e.g. `v1.0.0`) will automatically build and publish to PyPI.
