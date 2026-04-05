@@ -28,7 +28,7 @@ class CostEstimator:
 """
 
 MARKDOWN_DOC = """
-# ContextForge
+# LayoutLM Forge
 
 A tool for managing context.
 

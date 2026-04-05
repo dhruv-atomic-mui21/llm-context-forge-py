@@ -8,7 +8,7 @@ context-window validation, and ChatML-aware message counting.
 
 import math
 from typing import Any, Dict, List, Optional
-from contextforge.models import ModelRegistry, TokenizerBackend, ModelInfo
+from layoutlm_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
 
 class TokenCounter:
     """
@@ -228,7 +228,7 @@ class TokenCounter:
 
 
 if __name__ == "__main__":
-    print("ContextForge — Token Counter")
+    print("LayoutLM Forge — Token Counter")
     print("=" * 40)
     print("Usage:")
     print('  counter = TokenCounter("gpt-4o")')

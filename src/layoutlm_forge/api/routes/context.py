@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from contextforge.api.schemas import ContextAssembleRequest, ContextAssembleResponse
-from contextforge.context import ContextWindow, Priority
+from layoutlm_forge.api.schemas import ContextAssembleRequest, ContextAssembleResponse
+from layoutlm_forge.context import ContextWindow, Priority
 
 router = APIRouter()
 

@@ -4,8 +4,8 @@ Run with: pytest tests/performance/ --benchmark
 """
 
 import pytest
-from contextforge.tokenizer import TokenCounter
-from contextforge.chunker import DocumentChunker, ChunkStrategy
+from layoutlm_forge.tokenizer import TokenCounter
+from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy
 
 def test_benchmark_tokenizer(benchmark):
     from tests.fixtures.sample_data import LONG_TEXT

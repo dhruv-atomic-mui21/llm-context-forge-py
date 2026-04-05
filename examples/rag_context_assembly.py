@@ -5,7 +5,7 @@ Shows how to pack context dynamically based on priorities,
 guaranteeing system instructions fit while dropping lower priority RAG chunks if necessary.
 """
 
-from contextforge.context import ContextWindow, Priority
+from layoutlm_forge.context import ContextWindow, Priority
 
 def main():
     window = ContextWindow("gpt-4-turbo")
@@ -19,7 +19,7 @@ def main():
 
     # 2. User's actual question (should definitely be included)
     window.add_block(
-        "User question: Explain how ContextForge calculates costs.",
+        "User question: Explain how LayoutLM Forge calculates costs.",
         priority=Priority.HIGH,
         label="user_query"
     )
@@ -27,7 +27,7 @@ def main():
     # 3. Dynamic RAG snippets (might not fit depending on length)
     # Pretend these were retrieved from a vector database
     rag_snippets = [
-        "Snippet 1: The CostCalculator engine is in contextforge/cost.py",
+        "Snippet 1: The CostCalculator engine is in layoutlm_forge/cost.py",
         "Snippet 2: " + ("It takes model pricing from ModelRegistry... " * 50),
         "Snippet 3: Supported models include GPT-4o, Claude Opus.",
     ]

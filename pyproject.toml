@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "contextforge"
+name = "layoutlm-forge"
 version = "0.1.0"
 description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
 readme = "README.md"
@@ -38,14 +38,14 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/dhruv-atomic-mui21/contextforge"
-Repository = "https://github.com/dhruv-atomic-mui21/contextforge"
-Documentation = "https://github.com/dhruv-atomic-mui21/contextforge/tree/main/docs"
-"Bug Tracker" = "https://github.com/dhruv-atomic-mui21/contextforge/issues"
-Changelog = "https://github.com/dhruv-atomic-mui21/contextforge/releases"
+Homepage = "https://github.com/dhruv-atomic-mui21/layoutlm-forge"
+Repository = "https://github.com/dhruv-atomic-mui21/layoutlm-forge"
+Documentation = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/tree/main/docs"
+"Bug Tracker" = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/issues"
+Changelog = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/releases"
 
 [project.scripts]
-contextforge = "contextforge.cli.main:app"
+layoutlm-forge = "layoutlm_forge.cli.main:app"
 
 [project.optional-dependencies]
 api = [
@@ -87,5 +87,9 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
 [tool.setuptools.packages.find]
-include = ["contextforge*"]
+where = ["src"]
+include = ["layoutlm_forge*"]

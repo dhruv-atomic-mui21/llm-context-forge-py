@@ -3,7 +3,7 @@ Tests for TokenCounter
 """
 
 import pytest
-from contextforge.tokenizer import TokenCounter
+from layoutlm_forge.tokenizer import TokenCounter
 
 class TestTokenCounter:
     """Tests for TokenCounter."""

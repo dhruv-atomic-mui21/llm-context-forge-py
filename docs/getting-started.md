@@ -2,16 +2,16 @@
 
 ## Installation
 
-ContextForge relies on pure Python and a few essential dependencies (like `tiktoken` for OpenAI tokenization and `typer` for the CLI).
+LayoutLM Forge relies on pure Python and a few essential dependencies (like `tiktoken` for OpenAI tokenization and `typer` for the CLI).
 
 ```bash
-pip install contextforge
+pip install layoutlm_forge
 ```
 
 ## Quick Start (Python)
 
 ```python
-from contextforge.tokenizer import TokenCounter
+from layoutlm_forge.tokenizer import TokenCounter
 
 counter = TokenCounter("gpt-4o")
 
@@ -28,15 +28,15 @@ For more Python examples, please check the `examples/` folder in the repository!
 
 ## Quick Start (CLI)
 
-ContextForge provides a rich CLI to test and explore its capabilities quickly.
+LayoutLM Forge provides a rich CLI to test and explore its capabilities quickly.
 
 ```bash
 # Count tokens
-contextforge count "Hello world" --model gpt-4o
+layoutlm_forge count "Hello world" --model gpt-4o
 
 # Estimate cost
-contextforge cost my_document.txt --model claude-3-opus
+layoutlm_forge cost my_document.txt --model claude-3-opus
 
 # Start API server
-contextforge serve --port 8000
+layoutlm_forge serve --port 8000
 ```

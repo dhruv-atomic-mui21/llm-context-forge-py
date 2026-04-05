@@ -1,10 +1,10 @@
-# ContextForge Documentation
+# LayoutLM Forge Documentation
 
-Welcome to the ContextForge documentation!
+Welcome to the LayoutLM Forge documentation!
 
-ContextForge is a production-grade LLMOps infrastructure tool designed to help you manage LLM context windows, count tokens accurately, chunk documents intelligently, and estimate API costs before making expensive calls.
+LayoutLM Forge is a production-grade LLMOps infrastructure tool designed to help you manage LLM context windows, count tokens accurately, chunk documents intelligently, and estimate API costs before making expensive calls.
 
-## Why ContextForge?
+## Why LayoutLM Forge?
 
 - **Context window exhaustion failures** in production are frustrating and costly.
 - **Inaccurate token counting** leads to unexpected API bills and dropped requests.

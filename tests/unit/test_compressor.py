@@ -3,7 +3,7 @@ Tests for ContextCompressor
 """
 
 import pytest
-from contextforge.compressor import ContextCompressor, CompressionStrategy, CompressionResult
+from layoutlm_forge.compressor import ContextCompressor, CompressionStrategy, CompressionResult
 
 class TestCompressionResult:
     def test_ratio_calculation(self):

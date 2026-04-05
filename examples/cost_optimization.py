@@ -5,8 +5,8 @@ Shows how to compare pricing across multiple Large Language Models
 for the exact same dataset to optimize LLMOps expenses.
 """
 
-from contextforge.cost import CostCalculator
-from contextforge.models import ModelRegistry
+from layoutlm_forge.cost import CostCalculator
+from layoutlm_forge.models import ModelRegistry
 
 def main():
     # Documents we plan to process

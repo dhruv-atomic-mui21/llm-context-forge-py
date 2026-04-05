@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from contextforge.api.schemas import TokenCountRequest, TokenCountResponse, TokenValidateRequest, TokenValidateResponse
-from contextforge.tokenizer import TokenCounter
+from layoutlm_forge.api.schemas import TokenCountRequest, TokenCountResponse, TokenValidateRequest, TokenValidateResponse
+from layoutlm_forge.tokenizer import TokenCounter
 
 router = APIRouter()
 

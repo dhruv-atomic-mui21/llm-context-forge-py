@@ -3,7 +3,7 @@ Tests for ModelRegistry
 """
 
 import pytest
-from contextforge.models import ModelRegistry, TokenizerBackend, ModelInfo
+from layoutlm_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
 
 class TestModelRegistry:
     """Tests for the model registry."""

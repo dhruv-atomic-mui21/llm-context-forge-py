@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from contextforge.api.schemas import CostEstimateRequest, CostEstimateResponse
-from contextforge.cost import CostCalculator
+from layoutlm_forge.api.schemas import CostEstimateRequest, CostEstimateResponse
+from layoutlm_forge.cost import CostCalculator
 
 router = APIRouter()
 

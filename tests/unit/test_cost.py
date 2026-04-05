@@ -2,7 +2,7 @@
 Tests for CostCalculator
 """
 import pytest
-from contextforge.cost import CostCalculator, Cost, ConversationCost, BulkCostAnalysis
+from layoutlm_forge.cost import CostCalculator, Cost, ConversationCost, BulkCostAnalysis
 
 class TestCostCalculator:
     def setup_method(self):

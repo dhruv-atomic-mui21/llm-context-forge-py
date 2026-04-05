@@ -11,9 +11,9 @@ COPY pyproject.toml setup.py /app/
 RUN pip install -e .
 
 # Copy application files
-COPY contextforge/ /app/contextforge/
+COPY layoutlm_forge/ /app/layoutlm_forge/
 
 EXPOSE 8000
 
 # Start FastAPI server
-CMD ["python", "-m", "contextforge.api.app"]
+CMD ["python", "-m", "layoutlm_forge.api.app"]

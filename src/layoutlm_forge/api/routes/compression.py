@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from contextforge.api.schemas import CompressRequest, CompressResponse
-from contextforge.compressor import ContextCompressor, CompressionStrategy
+from layoutlm_forge.api.schemas import CompressRequest, CompressResponse
+from layoutlm_forge.compressor import ContextCompressor, CompressionStrategy
 
 router = APIRouter()
 

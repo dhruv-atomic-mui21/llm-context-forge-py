@@ -1,5 +1,5 @@
 """
-ContextForge Typer CLI
+LayoutLM Forge Typer CLI
 """
 
 import json
@@ -8,14 +8,14 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from contextforge.tokenizer import TokenCounter, ModelRegistry
-from contextforge.chunker import DocumentChunker, ChunkStrategy
-from contextforge.context import ContextWindow, Priority
-from contextforge.compressor import ContextCompressor, CompressionStrategy
-from contextforge.cost import CostCalculator
+from layoutlm_forge.tokenizer import TokenCounter, ModelRegistry
+from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy
+from layoutlm_forge.context import ContextWindow, Priority
+from layoutlm_forge.compressor import ContextCompressor, CompressionStrategy
+from layoutlm_forge.cost import CostCalculator
 
 app = typer.Typer(
-    name="contextforge",
+    name="layoutlm_forge",
     help="Production LLMOps infrastructure for context management",
     no_args_is_help=True,
 )
@@ -204,7 +204,7 @@ def cost(
 @app.command()
 def doctor() -> None:
     """Health check: display environment and model status."""
-    console.print("[bold green]ContextForge Doctor[/bold green]")
+    console.print("[bold green]LayoutLM Forge Doctor[/bold green]")
     try:
         import tiktoken
         console.print("✅ tiktoken installed")
@@ -218,24 +218,24 @@ def serve(
     host: str = typer.Option("0.0.0.0", "--host", help="API host"),
     port: int = typer.Option(8000, "--port", help="API port"),
 ) -> None:
-    """Start the ContextForge API server."""
+    """Start the LayoutLM Forge API server."""
     import uvicorn
-    console.print(f"Starting ContextForge API at http://{host}:{port}")
+    console.print(f"Starting LayoutLM Forge API at http://{host}:{port}")
     console.print(f"Docs: http://{host}:{port}/docs")
-    uvicorn.run("contextforge.api.app:app", host=host, port=port, reload=False)
+    uvicorn.run("layoutlm_forge.api.app:app", host=host, port=port, reload=False)
 
 
 @app.command()
 def demo() -> None:
     """Run a quick interactive demo showcasing features."""
     console.print("=" * 60)
-    console.print("  [bold]ContextForge[/bold] — Production LLMOps Infrastructure")
+    console.print("  [bold]LayoutLM Forge[/bold] — Production LLMOps Infrastructure")
     console.print("=" * 60)
     console.print()
 
     # 1. Token counting
     counter = TokenCounter("gpt-4o")
-    sample = "ContextForge helps you manage LLM context windows, count tokens accurately, chunk documents intelligently, and compress prompts to fit within model limits."
+    sample = "LayoutLM Forge helps you manage LLM context windows, count tokens accurately, chunk documents intelligently, and compress prompts to fit within model limits."
     tokens = counter.count(sample)
     cost_est = counter.estimate_cost(sample)
     console.print("📊 [bold]Token Counting[/bold]")

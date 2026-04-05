@@ -1,38 +1,38 @@
 <div align="center">
-  <h1>🔥 ContextForge</h1>
+  <h1> LayoutLM Forge</h1>
   <p><b>Production-Grade LLMOps Infrastructure for Context Window Management</b></p>
   <p><i>Deterministic token counting · Intelligent chunking · Priority-based context assembly · Cost estimation — the foundation every AI application needs.</i></p>
 
-  [![Tests](https://github.com/dhruv-atomic-mui21/contextforge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/contextforge/actions)
-  [![PyPI](https://img.shields.io/pypi/v/contextforge.svg)](https://pypi.org/project/contextforge/)
-  [![Python](https://img.shields.io/pypi/pyversions/contextforge.svg)](https://pypi.org/project/contextforge/)
+  [![Tests](https://github.com/dhruv-atomic-mui21/layoutlm_forge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/layoutlm_forge/actions)
+  [![PyPI](https://img.shields.io/pypi/v/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
+  [![Python](https://img.shields.io/pypi/pyversions/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-  [![Downloads](https://img.shields.io/pypi/dm/contextforge.svg)](https://pypi.org/project/contextforge/)
+  [![Downloads](https://img.shields.io/pypi/dm/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
 </div>
 
 ---
 
-## Why ContextForge?
+## Why LayoutLM Forge?
 
 Every production AI application eventually hits the same infrastructure problems:
 
-| Problem | Impact | ContextForge Solution |
+| Problem | Impact | LayoutLM Forge Solution |
 |---------|--------|-----------------------|
-| 🎯 Context window overflow | Silent failures, truncated responses | Priority-based assembly with overflow tracking |
-| 📊 Inaccurate token counting | Budget overruns, dropped requests | Deterministic counting via tiktoken + heuristic fallbacks |
-| 🔄 Naive text splitting | Broken semantics, degraded LLM reasoning | 5 chunking strategies (sentence, paragraph, semantic, code, fixed) |
-| 💸 Unpredictable API costs | Surprise bills, no cost governance | Pre-flight cost estimation across 15+ models |
-| 🗜️ Oversized prompts | Wasted tokens, slow responses | 4 compression strategies (extractive, truncate, middle-out, map-reduce) |
+|  Context window overflow | Silent failures, truncated responses | Priority-based assembly with overflow tracking |
+|  Inaccurate token counting | Budget overruns, dropped requests | Deterministic counting via tiktoken + heuristic fallbacks |
+|  Naive text splitting | Broken semantics, degraded LLM reasoning | 5 chunking strategies (sentence, paragraph, semantic, code, fixed) |
+|  Unpredictable API costs | Surprise bills, no cost governance | Pre-flight cost estimation across 15+ models |
+|  Oversized prompts | Wasted tokens, slow responses | 4 compression strategies (extractive, truncate, middle-out, map-reduce) |
 
 ## Installation
 
 ```bash
-pip install contextforge
+pip install layoutlm_forge
 ```
 
 With API server support:
 ```bash
-pip install "contextforge[api]"
+pip install "layoutlm_forge[api]"
 ```
 
 ## Quick Start
@@ -40,7 +40,7 @@ pip install "contextforge[api]"
 ### Token Counting
 
 ```python
-from contextforge import TokenCounter
+from layoutlm_forge import TokenCounter
 
 counter = TokenCounter("gpt-4o")
 tokens = counter.count("Hello, world!")
@@ -57,7 +57,7 @@ print(f"Cost: ${cost:.6f}")
 ### Intelligent Chunking
 
 ```python
-from contextforge import DocumentChunker, ChunkStrategy
+from layoutlm_forge import DocumentChunker, ChunkStrategy
 
 chunker = DocumentChunker("gpt-4o")
 
@@ -79,7 +79,7 @@ md_chunks = chunker.chunk_markdown(readme_text)
 The core pattern for RAG applications — guarantee critical context fits while gracefully dropping lower-priority content:
 
 ```python
-from contextforge import ContextWindow, Priority
+from layoutlm_forge import ContextWindow, Priority
 
 window = ContextWindow("gpt-4o")
 
@@ -105,7 +105,7 @@ print(f"Dropped:  {usage['num_excluded']} blocks")
 ### Cost Estimation
 
 ```python
-from contextforge import CostCalculator
+from layoutlm_forge import CostCalculator
 
 calc = CostCalculator("gpt-4o")
 
@@ -125,7 +125,7 @@ for model, analysis in comparison.items():
 ### Context Compression
 
 ```python
-from contextforge import ContextCompressor, CompressionStrategy
+from layoutlm_forge import ContextCompressor, CompressionStrategy
 
 compressor = ContextCompressor("gpt-4o")
 
@@ -141,7 +141,7 @@ result = compressor.compress(log_text, target_tokens=300, strategy=CompressionSt
 ### Conversation Management
 
 ```python
-from contextforge import ConversationManager
+from layoutlm_forge import ConversationManager
 
 manager = ConversationManager("gpt-4o")
 
@@ -167,7 +167,7 @@ trimmed = manager.get_context(max_tokens=4096, preserve_system=True)
 
 Register custom models:
 ```python
-from contextforge import ModelRegistry, ModelInfo, TokenizerBackend
+from layoutlm_forge import ModelRegistry, ModelInfo, TokenizerBackend
 
 ModelRegistry.register(ModelInfo(
     name="my-fine-tuned-model",
@@ -183,25 +183,25 @@ ModelRegistry.register(ModelInfo(
 
 ```bash
 # Count tokens
-contextforge count "Hello world" --model gpt-4o
+layoutlm_forge count "Hello world" --model gpt-4o
 
 # Chunk a document
-contextforge chunk document.md --strategy semantic --max-tokens 500
+layoutlm_forge chunk document.md --strategy semantic --max-tokens 500
 
 # Estimate cost
-contextforge cost document.txt --model claude-3.5-sonnet
+layoutlm_forge cost document.txt --model claude-3.5-sonnet
 
 # List all models
-contextforge models
+layoutlm_forge models
 
 # Health check
-contextforge doctor
+layoutlm_forge doctor
 
 # Start API server
-contextforge serve --port 8000
+layoutlm_forge serve --port 8000
 
 # Interactive demo
-contextforge demo
+layoutlm_forge demo
 ```
 
 ## REST API
@@ -209,8 +209,8 @@ contextforge demo
 Start the server and access interactive docs at `http://localhost:8000/docs`:
 
 ```bash
-pip install "contextforge[api]"
-contextforge serve
+pip install "layoutlm_forge[api]"
+layoutlm_forge serve
 ```
 
 | Endpoint | Method | Description |
@@ -226,7 +226,7 @@ contextforge serve
 ## Architecture
 
 ```
-contextforge/
+layoutlm_forge/
 ├── models.py        # Model registry (15+ models, pricing, backends)
 ├── tokenizer.py     # Multi-provider token counter (tiktoken + heuristics)
 ├── chunker.py       # 5-strategy document chunker with overlap
@@ -240,15 +240,15 @@ contextforge/
 ## Docker
 
 ```bash
-docker build -t contextforge .
+docker build -t layoutlm_forge .
 docker-compose up
 ```
 
 ## Development
 
 ```bash
-git clone https://github.com/dhruv-atomic-mui21/contextforge.git
-cd contextforge
+git clone https://github.com/dhruv-atomic-mui21/layoutlm_forge.git
+cd layoutlm_forge
 pip install -e ".[dev]"
 pytest
 ```

@@ -3,7 +3,7 @@ Tests for ContextWindow and ConversationManager
 """
 
 import pytest
-from contextforge.context import ContextWindow, ContextBlock, Priority, ConversationManager
+from layoutlm_forge.context import ContextWindow, ContextBlock, Priority, ConversationManager
 
 class TestContextWindow:
     def setup_method(self):

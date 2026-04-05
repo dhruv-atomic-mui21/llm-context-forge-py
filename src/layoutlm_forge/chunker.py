@@ -64,7 +64,7 @@ class DocumentChunker:
         Args:
             default_model: Model used for token counting.
         """
-        from contextforge.tokenizer import TokenCounter
+        from layoutlm_forge.tokenizer import TokenCounter
         self._counter = TokenCounter(default_model)
         self.default_model = default_model
 
@@ -367,7 +367,7 @@ class DocumentChunker:
 
 
 if __name__ == "__main__":
-    print("ContextForge — Document Chunker")
+    print("LayoutLM Forge — Document Chunker")
     print("=" * 40)
     print("Usage:")
     print("  chunker = DocumentChunker()")
