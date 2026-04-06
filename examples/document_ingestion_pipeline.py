@@ -5,9 +5,9 @@ Shows how to ingest a long document, chunk it securely,
 compress the chunks to save tokens, and estimate the cost.
 """
 
-from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy
-from layoutlm_forge.compressor import ContextCompressor, CompressionStrategy
-from layoutlm_forge.cost import CostCalculator
+from llm_context_forge.chunker import DocumentChunker, ChunkStrategy
+from llm_context_forge.compressor import ContextCompressor, CompressionStrategy
+from llm_context_forge.cost import CostCalculator
 
 def main():
     # Simulate a long document (e.g. parsed PDF or markdown file)

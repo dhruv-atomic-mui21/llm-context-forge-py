@@ -5,7 +5,7 @@ Shows how to automatically trim long conversation histories
 while preserving recent messages and system prompts.
 """
 
-from layoutlm_forge.context import ConversationManager
+from llm_context_forge.context import ConversationManager
 
 def main():
     manager = ConversationManager("gpt-4o")

@@ -3,10 +3,10 @@ Integration tests for a full pipeline flow
 """
 
 import pytest
-from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy
-from layoutlm_forge.context import ContextWindow, Priority
-from layoutlm_forge.compressor import ContextCompressor, CompressionStrategy
-from layoutlm_forge.cost import CostCalculator
+from llm_context_forge.chunker import DocumentChunker, ChunkStrategy
+from llm_context_forge.context import ContextWindow, Priority
+from llm_context_forge.compressor import ContextCompressor, CompressionStrategy
+from llm_context_forge.cost import CostCalculator
 
 def test_full_pipeline_flow():
     from tests.fixtures.sample_data import LONG_TEXT

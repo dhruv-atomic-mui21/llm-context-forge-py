@@ -3,7 +3,7 @@ Tests for TokenCounter
 """
 
 import pytest
-from layoutlm_forge.tokenizer import TokenCounter
+from llm_context_forge.tokenizer import TokenCounter
 
 class TestTokenCounter:
     """Tests for TokenCounter."""
@@ -100,3 +100,12 @@ class TestTokenCounter:
         counter = TokenCounter("gpt-4o")
         res = counter.count_with_warnings("hi", warn_threshold=0.0)
         assert len(res["warnings"]) > 0
+
+    def test_fallback_tokenizer(self):
+        # Directly test the fallback logic which uses tiktoken approximation
+        from llm_context_forge.models import TokenizerBackend
+        counter = TokenCounter("gpt-4o")
+        # Base count for 'Testing fallback' is 2 tokens in cl100k_base
+        # Default mult is 1.1 -> ceil(2 * 1.1) = ceil(2.2) = 3
+        count = counter._count_estimate("Testing fallback", TokenizerBackend.ESTIMATE)
+        assert count > 0

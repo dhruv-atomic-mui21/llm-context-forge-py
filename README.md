@@ -1,22 +1,23 @@
 <div align="center">
-  <h1> LayoutLM Forge</h1>
+  <h1> LLM Context Forge</h1>
   <p><b>Production-Grade LLMOps Infrastructure for Context Window Management</b></p>
   <p><i>Deterministic token counting · Intelligent chunking · Priority-based context assembly · Cost estimation — the foundation every AI application needs.</i></p>
 
-  [![Tests](https://github.com/dhruv-atomic-mui21/layoutlm_forge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/layoutlm_forge/actions)
-  [![PyPI](https://img.shields.io/pypi/v/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
-  [![Python](https://img.shields.io/pypi/pyversions/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
+  [![Tests](https://github.com/dhruv-atomic-mui21/llm_context_forge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/llm_context_forge/actions)
+  [![PyPI](https://img.shields.io/pypi/v/llm_context_forge.svg)](https://pypi.org/project/llm_context_forge/)
+  [![Python](https://img.shields.io/pypi/pyversions/llm_context_forge.svg)](https://pypi.org/project/llm_context_forge/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-  [![Downloads](https://img.shields.io/pypi/dm/layoutlm_forge.svg)](https://pypi.org/project/layoutlm_forge/)
+  [![Downloads](https://img.shields.io/pypi/dm/llm_context_forge.svg)](https://pypi.org/project/llm_context_forge/)
 </div>
-
 ---
 
-## Why LayoutLM Forge?
+> **Note**: This package is a general-purpose LLM context management toolkit and is **not related to Microsoft's LayoutLM multimodal models**.
+
+## Why LLM Context Forge?
 
 Every production AI application eventually hits the same infrastructure problems:
 
-| Problem | Impact | LayoutLM Forge Solution |
+| Problem | Impact | LLM Context Forge Solution |
 |---------|--------|-----------------------|
 |  Context window overflow | Silent failures, truncated responses | Priority-based assembly with overflow tracking |
 |  Inaccurate token counting | Budget overruns, dropped requests | Deterministic counting via tiktoken + heuristic fallbacks |
@@ -27,12 +28,12 @@ Every production AI application eventually hits the same infrastructure problems
 ## Installation
 
 ```bash
-pip install layoutlm_forge
+pip install llm-context-forge
 ```
 
 With API server support:
 ```bash
-pip install "layoutlm_forge[api]"
+pip install "llm-context-forge[api]"
 ```
 
 ## Quick Start
@@ -40,7 +41,7 @@ pip install "layoutlm_forge[api]"
 ### Token Counting
 
 ```python
-from layoutlm_forge import TokenCounter
+from llm_context_forge import TokenCounter
 
 counter = TokenCounter("gpt-4o")
 tokens = counter.count("Hello, world!")
@@ -57,7 +58,7 @@ print(f"Cost: ${cost:.6f}")
 ### Intelligent Chunking
 
 ```python
-from layoutlm_forge import DocumentChunker, ChunkStrategy
+from llm_context_forge import DocumentChunker, ChunkStrategy
 
 chunker = DocumentChunker("gpt-4o")
 
@@ -79,7 +80,7 @@ md_chunks = chunker.chunk_markdown(readme_text)
 The core pattern for RAG applications — guarantee critical context fits while gracefully dropping lower-priority content:
 
 ```python
-from layoutlm_forge import ContextWindow, Priority
+from llm_context_forge import ContextWindow, Priority
 
 window = ContextWindow("gpt-4o")
 
@@ -105,7 +106,7 @@ print(f"Dropped:  {usage['num_excluded']} blocks")
 ### Cost Estimation
 
 ```python
-from layoutlm_forge import CostCalculator
+from llm_context_forge import CostCalculator
 
 calc = CostCalculator("gpt-4o")
 
@@ -125,7 +126,7 @@ for model, analysis in comparison.items():
 ### Context Compression
 
 ```python
-from layoutlm_forge import ContextCompressor, CompressionStrategy
+from llm_context_forge import ContextCompressor, CompressionStrategy
 
 compressor = ContextCompressor("gpt-4o")
 
@@ -141,7 +142,7 @@ result = compressor.compress(log_text, target_tokens=300, strategy=CompressionSt
 ### Conversation Management
 
 ```python
-from layoutlm_forge import ConversationManager
+from llm_context_forge import ConversationManager
 
 manager = ConversationManager("gpt-4o")
 
@@ -158,16 +159,24 @@ trimmed = manager.get_context(max_tokens=4096, preserve_system=True)
 
 | Provider | Models | Token Counting | Pricing |
 |----------|--------|:--------------:|:-------:|
-| **OpenAI** | GPT-4, GPT-4 Turbo, GPT-4o, GPT-4o-mini, GPT-3.5 Turbo | ✅ tiktoken | ✅ |
-| **Anthropic** | Claude 3 Opus, Claude 3.5 Sonnet, Claude 3 Haiku | ≈ estimate | ✅ |
-| **Google** | Gemini Pro, Gemini Flash | ≈ estimate | ✅ |
-| **Meta** | Llama 3 8B, Llama 3 70B | ≈ estimate | — |
-| **Mistral** | Mistral Large | ≈ estimate | ✅ |
-| **Cohere** | Command R+ | ≈ estimate | ✅ |
+| **OpenAI** | GPT-4, GPT-4 Turbo, GPT-4o, GPT-4o-mini, GPT-3.5 Turbo | ✅ `tiktoken` | ✅ |
+| **Anthropic** | Claude 3 Opus, Claude 3.5 Sonnet, Claude 3 Haiku | ✅ `anthropic` | ✅ |
+| **Google** | Gemini Pro, Gemini Flash | ✅ `transformers` | ✅ |
+| **Meta** | Llama 3 8B, Llama 3 70B, Llama 3.1 405B | ✅ `transformers` | ✅ |
+| **Mistral** | Mistral Large | ✅ `mistral-common` | ✅ |
+| **Cohere** | Command R+ | ✅ `transformers` | ✅ |
+
+### Production-Grade Tokenizer Fallback
+
+In production environments, external tokenizer packages (`transformers`, `mistral-common`) might fail to download or initialize due to network errors. `llm-context-forge` provides a robust, production-grade fallback:
+- If a native tokenizer fails to load, the system degrades to OpenAI's fast `cl100k_base` (`tiktoken`).
+- Since most modern LLMs utilize similar Byte-Pair Encoding (BPE), `cl100k_base` offers a highly accurate baseline.
+- `llm-context-forge` automatically applies structural safety multipliers (e.g. `1.05x`) specifically tuned to each backend before throwing an overflow warning. 
+- A one-time warning is emitted via standard python logging to notify infrastructure teams of the fallback engagement.
 
 Register custom models:
 ```python
-from layoutlm_forge import ModelRegistry, ModelInfo, TokenizerBackend
+from llm_context_forge import ModelRegistry, ModelInfo, TokenizerBackend
 
 ModelRegistry.register(ModelInfo(
     name="my-fine-tuned-model",
@@ -183,25 +192,25 @@ ModelRegistry.register(ModelInfo(
 
 ```bash
 # Count tokens
-layoutlm_forge count "Hello world" --model gpt-4o
+llm_context_forge count "Hello world" --model gpt-4o
 
 # Chunk a document
-layoutlm_forge chunk document.md --strategy semantic --max-tokens 500
+llm_context_forge chunk document.md --strategy semantic --max-tokens 500
 
 # Estimate cost
-layoutlm_forge cost document.txt --model claude-3.5-sonnet
+llm_context_forge cost document.txt --model claude-3.5-sonnet
 
 # List all models
-layoutlm_forge models
+llm_context_forge models
 
 # Health check
-layoutlm_forge doctor
+llm_context_forge doctor
 
 # Start API server
-layoutlm_forge serve --port 8000
+llm_context_forge serve --port 8000
 
 # Interactive demo
-layoutlm_forge demo
+llm_context_forge demo
 ```
 
 ## REST API
@@ -209,8 +218,8 @@ layoutlm_forge demo
 Start the server and access interactive docs at `http://localhost:8000/docs`:
 
 ```bash
-pip install "layoutlm_forge[api]"
-layoutlm_forge serve
+pip install "llm_context_forge[api]"
+llm_context_forge serve
 ```
 
 | Endpoint | Method | Description |
@@ -226,7 +235,7 @@ layoutlm_forge serve
 ## Architecture
 
 ```
-layoutlm_forge/
+llm_context_forge/
 ├── models.py        # Model registry (15+ models, pricing, backends)
 ├── tokenizer.py     # Multi-provider token counter (tiktoken + heuristics)
 ├── chunker.py       # 5-strategy document chunker with overlap
@@ -240,15 +249,15 @@ layoutlm_forge/
 ## Docker
 
 ```bash
-docker build -t layoutlm_forge .
+docker build -t llm_context_forge .
 docker-compose up
 ```
 
 ## Development
 
 ```bash
-git clone https://github.com/dhruv-atomic-mui21/layoutlm_forge.git
-cd layoutlm_forge
+git clone https://github.com/dhruv-atomic-mui21/llm_context_forge.git
+cd llm_context_forge
 pip install -e ".[dev]"
 pytest
 ```

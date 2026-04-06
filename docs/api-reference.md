@@ -1,11 +1,11 @@
 # API Reference
 
-LayoutLM Forge includes a FastAPI application to serve these tools over HTTP.
+LLM Context Forge includes a FastAPI application to serve these tools over HTTP.
 
 By default, the server runs on port 8000. Start it via CLI:
 
 ```bash
-layoutlm_forge serve --port 8000
+llm_context_forge serve --port 8000
 ```
 
 ## Endpoints

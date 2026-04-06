@@ -8,5 +8,5 @@ services:
     environment:
       - LOG_LEVEL=info
     volumes:
-      - ./layoutlm_forge:/app/layoutlm_forge
-    command: python -m uvicorn layoutlm_forge.api.app:app --host 0.0.0.0 --port 8000 --reload
+      - ./src/llm_context_forge:/app/src/llm_context_forge
+    command: python -m uvicorn llm_context_forge.api.app:app --host 0.0.0.0 --port 8000 --reload

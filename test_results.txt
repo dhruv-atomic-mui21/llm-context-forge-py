@@ -1,0 +1,240 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\dhruv\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+benchmark: 5.2.3 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.12.1, langsmith-0.7.23, asyncio-1.3.0, benchmark-5.2.3, cov-7.1.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 0 items / 9 errors
+
+=================================== ERRORS ====================================
+__________ ERROR collecting tests/integration/test_api_endpoints.py ___________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\integration\test_api_endpoints.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\integration\test_api_endpoints.py:8: in <module>
+    from llm_context_forge.api.app import app
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+__________ ERROR collecting tests/integration/test_full_pipeline.py ___________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\integration\test_full_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\integration\test_full_pipeline.py:6: in <module>
+    from llm_context_forge.chunker import DocumentChunker, ChunkStrategy
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+____________ ERROR collecting tests/performance/test_benchmarks.py ____________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\performance\test_benchmarks.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\performance\test_benchmarks.py:7: in <module>
+    from llm_context_forge.tokenizer import TokenCounter
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+_________________ ERROR collecting tests/unit/test_chunker.py _________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_chunker.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_chunker.py:5: in <module>
+    from llm_context_forge.chunker import DocumentChunker, ChunkStrategy, Chunk
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+_______________ ERROR collecting tests/unit/test_compressor.py ________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_compressor.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_compressor.py:6: in <module>
+    from llm_context_forge.compressor import ContextCompressor, CompressionStrategy, CompressionResult
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+_________________ ERROR collecting tests/unit/test_context.py _________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_context.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_context.py:6: in <module>
+    from llm_context_forge.context import ContextWindow, ContextBlock, Priority, ConversationManager
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+__________________ ERROR collecting tests/unit/test_cost.py ___________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_cost.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_cost.py:5: in <module>
+    from llm_context_forge.cost import CostCalculator, Cost, ConversationCost, BulkCostAnalysis
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+_________________ ERROR collecting tests/unit/test_models.py __________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_models.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_models.py:6: in <module>
+    from llm_context_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+________________ ERROR collecting tests/unit/test_tokenizer.py ________________
+ImportError while importing test module 'C:\Users\dhruv\OneDrive\Desktop\learnproject\portfolio-projects\document-ai\layoutlm-parser\tests\unit\test_tokenizer.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:507: in importtestmodule
+    mod = import_path(
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\dhruv\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\assertion\rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests\unit\test_tokenizer.py:6: in <module>
+    from llm_context_forge.tokenizer import TokenCounter
+E   ModuleNotFoundError: No module named 'llm_context_forge'
+=========================== short test summary info ===========================
+ERROR tests/integration/test_api_endpoints.py
+ERROR tests/integration/test_full_pipeline.py
+ERROR tests/performance/test_benchmarks.py
+ERROR tests/unit/test_chunker.py
+ERROR tests/unit/test_compressor.py
+ERROR tests/unit/test_context.py
+ERROR tests/unit/test_cost.py
+ERROR tests/unit/test_models.py
+ERROR tests/unit/test_tokenizer.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 9 errors during collection !!!!!!!!!!!!!!!!!!!
+============================== 9 errors in 1.39s ==============================

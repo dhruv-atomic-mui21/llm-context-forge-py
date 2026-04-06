@@ -65,7 +65,7 @@ class ContextCompressor:
         Args:
             default_model: Model for token counting.
         """
-        from layoutlm_forge.tokenizer import TokenCounter
+        from llm_context_forge.tokenizer import TokenCounter
         self._counter = TokenCounter(default_model)
         self.default_model = default_model
 
@@ -419,7 +419,7 @@ class ContextCompressor:
 
 
 if __name__ == "__main__":
-    print("LayoutLM Forge — Context Compressor")
+    print("LLM Context Forge — Context Compressor")
     print("=" * 40)
     print("Usage:")
     print("  compressor = ContextCompressor()")

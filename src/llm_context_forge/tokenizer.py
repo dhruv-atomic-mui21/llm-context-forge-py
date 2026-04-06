@@ -8,7 +8,7 @@ context-window validation, and ChatML-aware message counting.
 
 import math
 from typing import Any, Dict, List, Optional
-from layoutlm_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
+from llm_context_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
 
 class TokenCounter:
     """
@@ -36,6 +36,14 @@ class TokenCounter:
         """
         self.default_model = default_model
         self._tiktoken_cache: Dict[str, Any] = {}
+        self._hf_cache: Dict[str, Any] = {}
+        self._mistral_tokenizer: Any = None
+        self._anthropic_tokenizer: Any = None
+        self._fallback_warned = False
+
+        # Add logging for production fallbacks
+        import logging
+        self.logger = logging.getLogger("llm_context_forge.tokenizer")
 
     # ------------------------------------------------------------------
     # Public API
@@ -59,6 +67,18 @@ class TokenCounter:
 
         if info.backend == TokenizerBackend.OPENAI and info.encoding_name:
             return self._count_tiktoken(text, info.encoding_name)
+        
+        try:
+            if info.backend == TokenizerBackend.HUGGINGFACE and info.encoding_name:
+                return self._count_huggingface(text, info.encoding_name)
+            elif info.backend == TokenizerBackend.MISTRAL:
+                return self._count_mistral(text, info.name)
+            elif info.backend == TokenizerBackend.ANTHROPIC:
+                return self._count_anthropic(text)
+        except (ImportError, Exception) as e:
+            if not self._fallback_warned:
+                self.logger.warning(f"Exact tokenizer unavailable for {info.name} ({e}). Using production-grade fallback.")
+                self._fallback_warned = True
 
         return self._count_estimate(text, info.backend)
 
@@ -221,14 +241,53 @@ class TokenCounter:
                 )
         return self._tiktoken_cache[encoding_name]
 
+    def _count_huggingface(self, text: str, encoding_name: str) -> int:
+        """Count tokens using Hugging Face transformers."""
+        if encoding_name not in self._hf_cache:
+            from transformers import AutoTokenizer
+            self._hf_cache[encoding_name] = AutoTokenizer.from_pretrained(encoding_name)
+        return len(self._hf_cache[encoding_name].encode(text))
+
+    def _count_mistral(self, text: str, model_name: str) -> int:
+        """Count tokens using mistral-common."""
+        if not self._mistral_tokenizer:
+            from mistral_common.tokens.tokenizers.mistral import MistralTokenizer
+            # Load the default mistral tokenizer (v3)
+            self._mistral_tokenizer = MistralTokenizer.v3(is_tekken=True)
+        return len(self._mistral_tokenizer.encode_chat_completion(
+            {"messages": [{"role": "user", "content": text}]}
+        ).tokens)
+
+    def _count_anthropic(self, text: str) -> int:
+        """Count tokens using anthropic client SDK."""
+        if not self._anthropic_tokenizer:
+            import anthropic
+            self._anthropic_tokenizer = anthropic.Client().get_tokenizer()
+        return len(self._anthropic_tokenizer.encode(text))
+
     def _count_estimate(self, text: str, backend: TokenizerBackend) -> int:
-        """Estimate token count using chars-per-token heuristic."""
-        ratio = self._CHARS_PER_TOKEN.get(backend, 4.0)
-        return max(1, math.ceil(len(text) / ratio))
+        """
+        Production-grade fallback token count estimation.
+        Uses OpenAI's tiktoken cl100k_base with a safety scalar since
+        most modern tokenizers use similar BPE models.
+        """
+        enc = self._get_tiktoken_encoder("cl100k_base")
+        base_count = len(enc.encode(text))
+        
+        # Apply safety multiplier based on target backend
+        multipliers = {
+            TokenizerBackend.LLAMA: 1.05,
+            TokenizerBackend.MISTRAL: 1.05,
+            TokenizerBackend.GOOGLE: 1.0,
+            TokenizerBackend.ANTHROPIC: 1.05,
+        }
+        mult = multipliers.get(backend, 1.1)
+        
+        return max(1, math.ceil(base_count * mult))
 
 
 if __name__ == "__main__":
-    print("LayoutLM Forge — Token Counter")
+    print("LLM Context Forge — Token Counter")
     print("=" * 40)
     print("Usage:")
     print('  counter = TokenCounter("gpt-4o")')

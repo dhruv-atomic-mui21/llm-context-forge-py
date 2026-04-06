@@ -1,4 +1,4 @@
-# Contributing to LayoutLM Forge
+# Contributing to LLM Context Forge
 
 First off, thanks for taking the time to contribute!
 
@@ -22,8 +22,8 @@ First off, thanks for taking the time to contribute!
 - Ensure all tests pass (`pytest tests/`).
 - Code must be formatted with `ruff` and pass type checking with `mypy`.
   ```bash
-  ruff check layoutlm_forge/
-  mypy layoutlm_forge/
+  ruff check llm_context_forge/
+  mypy llm_context_forge/
   ```
 - Submit a Pull Request targeting the `main` branch.
 

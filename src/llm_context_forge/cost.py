@@ -7,8 +7,8 @@ Estimate token costs before sending data to LLM providers.
 
 from typing import Dict, List, Optional, Union
 from dataclasses import dataclass
-from layoutlm_forge.models import ModelRegistry
-from layoutlm_forge.tokenizer import TokenCounter
+from llm_context_forge.models import ModelRegistry
+from llm_context_forge.tokenizer import TokenCounter
 
 
 @dataclass

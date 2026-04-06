@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "layoutlm-forge"
-version = "0.1.0"
+name = "llm-context-forge"
+version = "0.1.1"
 description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
 readme = "README.md"
 license = "MIT"
@@ -38,16 +38,21 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/dhruv-atomic-mui21/layoutlm-forge"
-Repository = "https://github.com/dhruv-atomic-mui21/layoutlm-forge"
-Documentation = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/tree/main/docs"
-"Bug Tracker" = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/issues"
-Changelog = "https://github.com/dhruv-atomic-mui21/layoutlm-forge/releases"
+Homepage = "https://github.com/dhruv-atomic-mui21/llm-context-forge"
+Repository = "https://github.com/dhruv-atomic-mui21/llm-context-forge"
+Documentation = "https://github.com/dhruv-atomic-mui21/llm-context-forge/tree/main/docs"
+"Bug Tracker" = "https://github.com/dhruv-atomic-mui21/llm-context-forge/issues"
+Changelog = "https://github.com/dhruv-atomic-mui21/llm-context-forge/releases"
 
 [project.scripts]
-layoutlm-forge = "layoutlm_forge.cli.main:app"
+llm-context-forge = "llm_context_forge.cli.main:app"
 
 [project.optional-dependencies]
+tokenizers = [
+    "transformers>=4.0.0",
+    "mistral-common>=1.0.0",
+    "anthropic>=0.18.0",
+]
 api = [
     "fastapi>=0.95.0",
     "uvicorn>=0.21.0",
@@ -92,4 +97,4 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["layoutlm_forge*"]
+include = ["llm_context_forge*"]

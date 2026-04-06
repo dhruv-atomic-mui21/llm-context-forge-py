@@ -61,7 +61,7 @@ class ContextWindow:
         Args:
             default_model: Model for token counting.
         """
-        from layoutlm_forge.tokenizer import TokenCounter
+        from llm_context_forge.tokenizer import TokenCounter
         self._counter = TokenCounter(default_model)
         self.default_model = default_model
         self._blocks: List[ContextBlock] = []
@@ -220,7 +220,7 @@ class ConversationManager:
         Args:
             default_model: Model for token counting.
         """
-        from layoutlm_forge.tokenizer import TokenCounter
+        from llm_context_forge.tokenizer import TokenCounter
         self._counter = TokenCounter(default_model)
         self.default_model = default_model
         self._messages: List[Dict[str, Any]] = []
@@ -325,7 +325,7 @@ class ConversationManager:
 
 
 if __name__ == "__main__":
-    print("LayoutLM Forge — Context Window Manager")
+    print("LLM Context Forge — Context Window Manager")
     print("=" * 40)
     print("Usage:")
     print("  window = ContextWindow()")

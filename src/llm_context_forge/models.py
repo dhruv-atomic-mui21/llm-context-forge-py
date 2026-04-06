@@ -11,6 +11,8 @@ class TokenizerBackend(Enum):
     ANTHROPIC = "anthropic"
     GOOGLE = "google"
     LLAMA = "llama"
+    HUGGINGFACE = "huggingface"
+    MISTRAL = "mistral"
     ESTIMATE = "estimate"
 
 @dataclass
@@ -75,8 +77,8 @@ class ModelRegistry:
         ),
         # Google -----------------------------------------------------------
         "gemini-pro": ModelInfo(
-            "gemini-pro", TokenizerBackend.GOOGLE, 1_000_000,
-            input_cost_per_1k=0.00125, output_cost_per_1k=0.005,
+            "gemini-pro", TokenizerBackend.GOOGLE, 2_000_000,
+            input_cost_per_1k=0.0035, output_cost_per_1k=0.0105,
         ),
         "gemini-flash": ModelInfo(
             "gemini-flash", TokenizerBackend.GOOGLE, 1_000_000,
@@ -84,20 +86,30 @@ class ModelRegistry:
         ),
         # Llama (open-source) ----------------------------------------------
         "llama-3-8b": ModelInfo(
-            "llama-3-8b", TokenizerBackend.LLAMA, 8_192,
+            "llama-3-8b", TokenizerBackend.HUGGINGFACE, 8_192,
+            encoding_name="meta-llama/Meta-Llama-3-8B",
+            input_cost_per_1k=0.00005, output_cost_per_1k=0.00005,
         ),
         "llama-3-70b": ModelInfo(
-            "llama-3-70b", TokenizerBackend.LLAMA, 8_192,
+            "llama-3-70b", TokenizerBackend.HUGGINGFACE, 8_192,
+            encoding_name="meta-llama/Meta-Llama-3-70B",
+            input_cost_per_1k=0.00054, output_cost_per_1k=0.00054,
+        ),
+        "llama-3.1-405b": ModelInfo(
+            "llama-3.1-405b", TokenizerBackend.HUGGINGFACE, 128_000,
+            encoding_name="meta-llama/Meta-Llama-3.1-405B",
+            input_cost_per_1k=0.002, output_cost_per_1k=0.002,
         ),
         # Mistral
         "mistral-large": ModelInfo(
-            "mistral-large", TokenizerBackend.ESTIMATE, 32_768,
-            input_cost_per_1k=0.004, output_cost_per_1k=0.012,
+            "mistral-large", TokenizerBackend.MISTRAL, 128_000,
+            input_cost_per_1k=0.003, output_cost_per_1k=0.009,
         ),
         # Cohere
         "command-r-plus": ModelInfo(
-            "command-r-plus", TokenizerBackend.ESTIMATE, 128_000,
-            input_cost_per_1k=0.003, output_cost_per_1k=0.015,
+            "command-r-plus", TokenizerBackend.HUGGINGFACE, 128_000,
+            encoding_name="CohereForAI/c4ai-command-r-plus",
+            input_cost_per_1k=0.0025, output_cost_per_1k=0.010,
         ),
     }
 

@@ -1,11 +1,11 @@
 """
-Tests for LayoutLM Forge FastAPI Application
+Tests for LLM Context Forge FastAPI Application
 """
 
 import pytest
 from fastapi.testclient import TestClient
 
-from layoutlm_forge.api.app import app
+from llm_context_forge.api.app import app
 
 client = TestClient(app)
 

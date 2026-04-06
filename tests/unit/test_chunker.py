@@ -2,7 +2,7 @@
 Tests for DocumentChunker
 """
 import pytest
-from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy, Chunk
+from llm_context_forge.chunker import DocumentChunker, ChunkStrategy, Chunk
 
 class TestChunkCreation:
     """Tests for Chunk dataclass."""

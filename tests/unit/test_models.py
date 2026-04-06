@@ -3,7 +3,7 @@ Tests for ModelRegistry
 """
 
 import pytest
-from layoutlm_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
+from llm_context_forge.models import ModelRegistry, TokenizerBackend, ModelInfo
 
 class TestModelRegistry:
     """Tests for the model registry."""
@@ -48,4 +48,4 @@ class TestModelRegistry:
 
     def test_llama_models_exist(self):
         info = ModelRegistry.get("llama-3-8b")
-        assert info.backend == TokenizerBackend.LLAMA
+        assert info.backend == TokenizerBackend.HUGGINGFACE

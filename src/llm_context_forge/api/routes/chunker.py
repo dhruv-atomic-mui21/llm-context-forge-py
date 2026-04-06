@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from layoutlm_forge.api.schemas import ChunkRequest, ChunkResponse
-from layoutlm_forge.chunker import DocumentChunker, ChunkStrategy
+from llm_context_forge.api.schemas import ChunkRequest, ChunkResponse
+from llm_context_forge.chunker import DocumentChunker, ChunkStrategy
 
 router = APIRouter()
 

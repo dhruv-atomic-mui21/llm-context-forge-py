@@ -4,14 +4,14 @@ Basic Token Counting Example
 Shows how to count tokens and estimate capacity/cost for a given text.
 """
 
-from layoutlm_forge.tokenizer import TokenCounter
+from llm_context_forge.tokenizer import TokenCounter
 
 def main():
     target_model = "gpt-4o"
     counter = TokenCounter(target_model)
 
     sample_text = (
-        "LayoutLM Forge is a production-grade library for LLMOps. "
+        "LLM Context Forge is a production-grade library for LLMOps. "
         "It provides modular solutions for managing context windows."
     )
 

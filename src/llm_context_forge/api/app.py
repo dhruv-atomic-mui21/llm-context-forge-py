@@ -1,5 +1,5 @@
 """
-LayoutLM Forge — FastAPI Application
+LLM Context Forge — FastAPI Application
 
 Production LLMOps Infrastructure HTTP API.
 """
@@ -9,14 +9,14 @@ from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-from layoutlm_forge.models import ModelRegistry
-from layoutlm_forge.api.routes import tokenizer, chunker, context, compression, cost
-from layoutlm_forge.api.schemas import HealthResponse
+from llm_context_forge.models import ModelRegistry
+from llm_context_forge.api.routes import tokenizer, chunker, context, compression, cost
+from llm_context_forge.api.schemas import HealthResponse
 
 # ── App ───────────────────────────────────────────────────────────────
 
 app = FastAPI(
-    title="LayoutLM Forge API",
+    title="LLM Context Forge API",
     description="LLMOps Infrastructure HTTP API for token counting, chunking, and context management",
     version="1.0.0",
 )
@@ -51,7 +51,7 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="LayoutLM Forge API",
+        title="LLM Context Forge API",
         version="1.0.0",
         description="Production LLMOps Infrastructure HTTP API.",
         routes=app.routes,
