@@ -13,7 +13,7 @@ from llm_context_forge.context import ContextWindow, ContextBlock, Priority, Con
 from llm_context_forge.compressor import ContextCompressor, CompressionStrategy, CompressionResult
 from llm_context_forge.cost import CostCalculator, Cost, ConversationCost, BulkCostAnalysis
 
-__version__ = "0.1.0"
+__version__ = "0.1.5"
 
 __all__ = [
     # Models
