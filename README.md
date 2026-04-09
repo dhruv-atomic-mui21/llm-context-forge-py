@@ -3,7 +3,7 @@
   <p><b>Production-Grade LLMOps Infrastructure for Context Window Management</b></p>
   <p><i>Deterministic token counting · Intelligent chunking · Priority-based context assembly · Cost estimation — the foundation every AI application needs.</i></p>
 
-  [![Tests](https://github.com/dhruv-atomic-mui21/llm_context_forge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/llm_context_forge/actions)
+  [![Tests](https://github.com/dhruv-atomic-mui21/layout lm-forge/workflows/Tests/badge.svg)](https://github.com/dhruv-atomic-mui21/layoutlm-forge/actions)
   [![PyPI](https://img.shields.io/pypi/v/llm_context_forge.svg)](https://pypi.org/project/llm_context_forge/)
   [![Python](https://img.shields.io/pypi/pyversions/llm_context_forge.svg)](https://pypi.org/project/llm_context_forge/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
