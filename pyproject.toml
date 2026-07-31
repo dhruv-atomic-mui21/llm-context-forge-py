@@ -7,7 +7,8 @@ name = "llm-context-forge"
 version = "1.0.0"
 description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
 readme = "README.md"
-license = "MIT"
+license = { text = "MIT" }
+
 requires-python = ">=3.8"
 authors = [
   { name = "Dhruv" }
