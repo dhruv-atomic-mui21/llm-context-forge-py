@@ -5,16 +5,19 @@ Splits text into token-bounded chunks using multiple strategies:
   - Fixed-size (character / token)
   - Sentence-aware
   - Paragraph-aware
-  - Semantic (markdown headings / code fences)
+  - Heuristic (markdown headings / structure)
+  - Semantic (embedding-based percentile drop via sentence-transformers)
   - Code-aware (function / class boundaries)
 
-Supports configurable overlap and automatic merging of small chunks.
+Supports configurable overlap, automatic merging of small chunks, and async execution.
 """
 
 import re
+import warnings
 from enum import Enum
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
+import anyio
 
 
 class ChunkStrategy(Enum):
@@ -22,6 +25,7 @@ class ChunkStrategy(Enum):
     FIXED = "fixed"
     SENTENCE = "sentence"
     PARAGRAPH = "paragraph"
+    HEURISTIC = "heuristic"
     SEMANTIC = "semantic"
     CODE = "code"
 
@@ -44,7 +48,7 @@ class DocumentChunker:
     Intelligent document chunker.
 
     Splits documents into token-bounded pieces while respecting
-    natural boundaries (sentences, paragraphs, headings, code blocks).
+    natural boundaries (sentences, paragraphs, headings, code blocks, or semantic embeddings).
     """
 
     # Regex patterns for boundary detection
@@ -79,16 +83,20 @@ class DocumentChunker:
         max_tokens: int = 500,
         overlap_tokens: int = 50,
         model: Optional[str] = None,
+        semantic_threshold_percentile: float = 95.0,
+        embedding_model: str = "all-MiniLM-L6-v2",
     ) -> List[Chunk]:
         """
         Chunk *text* using the given strategy.
 
         Args:
-            text:           Text to chunk.
-            strategy:       Splitting strategy.
-            max_tokens:     Max tokens per chunk.
-            overlap_tokens: Token overlap between consecutive chunks.
-            model:          Model for token counting.
+            text:                          Text to chunk.
+            strategy:                      Splitting strategy.
+            max_tokens:                    Max tokens per chunk.
+            overlap_tokens:                Token overlap between consecutive chunks.
+            model:                         Model for token counting.
+            semantic_threshold_percentile: Percentile drop threshold for SEMANTIC strategy.
+            embedding_model:               HuggingFace sentence-transformer model name.
 
         Returns:
             List of Chunk objects.
@@ -98,8 +106,55 @@ class DocumentChunker:
 
         model = model or self.default_model
 
-        segments = self._split_by_strategy(text, strategy)
+        # Handle deprecation / strategy resolution
+        resolved_strategy = strategy
+        if strategy == ChunkStrategy.SEMANTIC or str(strategy).lower() == "semantic":
+            # Check if sentence_transformers is available
+            try:
+                import sentence_transformers  # noqa: F401
+                # True semantic chunking path
+                return self._semantic_embedding_chunk(
+                    text,
+                    max_tokens=max_tokens,
+                    overlap_tokens=overlap_tokens,
+                    model=model,
+                    percentile=semantic_threshold_percentile,
+                    embedding_model=embedding_model,
+                )
+            except ImportError:
+                warnings.warn(
+                    "llm-context-forge: ChunkStrategy.SEMANTIC (markdown header splitting) "
+                    "has been renamed to ChunkStrategy.HEURISTIC. Falling back to HEURISTIC strategy. "
+                    "Install `pip install llm-context-forge[semantic]` to enable embedding-based semantic chunking.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                resolved_strategy = ChunkStrategy.HEURISTIC
+
+        segments = self._split_by_strategy(text, resolved_strategy)
         return self._assemble_chunks(segments, max_tokens, overlap_tokens, model)
+
+    async def achunk(
+        self,
+        text: str,
+        strategy: ChunkStrategy = ChunkStrategy.PARAGRAPH,
+        max_tokens: int = 500,
+        overlap_tokens: int = 50,
+        model: Optional[str] = None,
+        semantic_threshold_percentile: float = 95.0,
+        embedding_model: str = "all-MiniLM-L6-v2",
+    ) -> List[Chunk]:
+        """Async counterpart for chunking documents."""
+        return await anyio.to_thread.run_sync(
+            self.chunk,
+            text,
+            strategy,
+            max_tokens,
+            overlap_tokens,
+            model,
+            semantic_threshold_percentile,
+            embedding_model,
+        )
 
     def chunk_code(
         self,
@@ -109,14 +164,6 @@ class DocumentChunker:
     ) -> List[Chunk]:
         """
         Chunk source code respecting function/class boundaries.
-
-        Args:
-            code:      Source code.
-            language:  Programming language hint.
-            max_tokens: Max tokens per chunk.
-
-        Returns:
-            List of Chunk objects.
         """
         blocks = self._split_code_blocks(code, language)
         return self._assemble_chunks(blocks, max_tokens, overlap_tokens=0)
@@ -129,14 +176,6 @@ class DocumentChunker:
     ) -> List[Chunk]:
         """
         Chunk markdown respecting headings and code fences.
-
-        Args:
-            md:             Markdown text.
-            max_tokens:     Max tokens per chunk.
-            overlap_tokens: Token overlap.
-
-        Returns:
-            List of Chunk objects.
         """
         sections = self._split_markdown_sections(md)
         return self._assemble_chunks(sections, max_tokens, overlap_tokens)
@@ -148,13 +187,6 @@ class DocumentChunker:
     ) -> List[Chunk]:
         """
         Merge consecutive small chunks until each meets *min_tokens*.
-
-        Args:
-            chunks:     List of chunks.
-            min_tokens: Minimum token count after merging.
-
-        Returns:
-            Merged chunk list.
         """
         if not chunks:
             return []
@@ -201,7 +233,7 @@ class DocumentChunker:
             return self._split_sentences(text)
         elif strategy == ChunkStrategy.PARAGRAPH:
             return self._split_paragraphs(text)
-        elif strategy == ChunkStrategy.SEMANTIC:
+        elif strategy in (ChunkStrategy.HEURISTIC, ChunkStrategy.SEMANTIC):
             return self._split_markdown_sections(text)
         elif strategy == ChunkStrategy.CODE:
             return self._split_code_blocks(text)
@@ -259,6 +291,58 @@ class DocumentChunker:
             blocks.append('\n'.join(current))
 
         return [b for b in blocks if b.strip()]
+
+    # ------------------------------------------------------------------
+    # True Semantic Chunking (Greg Kamradt's Percentile Drop Algorithm)
+    # ------------------------------------------------------------------
+
+    def _semantic_embedding_chunk(
+        self,
+        text: str,
+        max_tokens: int,
+        overlap_tokens: int,
+        model: str,
+        percentile: float = 95.0,
+        embedding_model: str = "all-MiniLM-L6-v2",
+    ) -> List[Chunk]:
+        """Embedding-based semantic chunking using cosine similarity drops."""
+        from sentence_transformers import SentenceTransformer
+        import numpy as np
+
+        sentences = self._split_sentences(text)
+        if len(sentences) <= 1:
+            return self._assemble_chunks(sentences, max_tokens, overlap_tokens, model)
+
+        st_model = SentenceTransformer(embedding_model)
+        embeddings = st_model.encode(sentences)
+
+        # Compute cosine similarities between adjacent sentence embeddings
+        norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+        norms[norms == 0] = 1e-10
+        normed = embeddings / norms
+
+        similarities = [
+            float(np.dot(normed[i], normed[i + 1]))
+            for i in range(len(normed) - 1)
+        ]
+
+        # Calculate threshold percentile drop
+        cutoff = np.percentile(similarities, 100.0 - percentile)
+
+        grouped_segments: List[str] = []
+        current_group: List[str] = [sentences[0]]
+
+        for i, sim in enumerate(similarities):
+            if sim < cutoff:
+                grouped_segments.append(" ".join(current_group))
+                current_group = [sentences[i + 1]]
+            else:
+                current_group.append(sentences[i + 1])
+
+        if current_group:
+            grouped_segments.append(" ".join(current_group))
+
+        return self._assemble_chunks(grouped_segments, max_tokens, overlap_tokens, model)
 
     # ------------------------------------------------------------------
     # Chunk assembly
@@ -339,12 +423,10 @@ class DocumentChunker:
         model: Optional[str] = None,
     ) -> List[str]:
         """Force-split a text that exceeds max_tokens."""
-        # Split by sentences first, then fall back to characters
         sentences = self._split_sentences(text)
         if len(sentences) > 1:
             return [s for s in sentences if s.strip()]
 
-        # Character-level split as last resort
         avg_chars = int(max_tokens * 4)  # ~4 chars per token
         return [text[i:i + avg_chars] for i in range(0, len(text), avg_chars)]
 
@@ -355,7 +437,6 @@ class DocumentChunker:
         model: Optional[str] = None,
     ) -> str:
         """Extract the last *overlap_tokens* worth of text from *text*."""
-        # Walk backwards from end
         words = text.split()
         overlap_text = ""
         for word in reversed(words):
@@ -364,12 +445,3 @@ class DocumentChunker:
                 break
             overlap_text = candidate
         return overlap_text.strip()
-
-
-if __name__ == "__main__":
-    print("LLM Context Forge — Document Chunker")
-    print("=" * 40)
-    print("Usage:")
-    print("  chunker = DocumentChunker()")
-    print("  chunks  = chunker.chunk(text, ChunkStrategy.PARAGRAPH, max_tokens=500)")
-    print("  code_chunks = chunker.chunk_code(source, 'python', max_tokens=500)")

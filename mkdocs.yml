@@ -1,0 +1,55 @@
+site_name: LLM Context Forge Documentation
+site_url: https://docs.dhruvchudasama.me
+site_description: Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression.
+site_author: Dhruv
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Overview: index.md
+  - Pricing Integrity: pricing.md
+  - Framework Integrations: integrations.md
+  - Async & Streaming API: async.md
+  - Benchmarks: benchmarks.md
+  - Summary of Changes: changes.md
+  - Changelog: CHANGELOG.md
+
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables

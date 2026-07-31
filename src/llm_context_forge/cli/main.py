@@ -276,5 +276,65 @@ def demo() -> None:
     console.print()
 
 
+pricing_app = typer.Typer(help="Manage and verify model pricing registry")
+app.add_typer(pricing_app, name="pricing")
+
+
+@pricing_app.command("list")
+def pricing_list() -> None:
+    """List all models with dates, confidence levels, and pricing rates."""
+    table = Table(title="Model Pricing Registry")
+    table.add_column("Model", style="cyan")
+    table.add_column("Provider", style="magenta")
+    table.add_column("Input $/1M", justify="right", style="green")
+    table.add_column("Output $/1M", justify="right", style="green")
+    table.add_column("Retrieved", justify="center")
+    table.add_column("Confidence", justify="center")
+
+    for name in ModelRegistry.list_models():
+        info = ModelRegistry.get(name)
+        table.add_row(
+            info.name,
+            info.provider,
+            f"${info.input_cost_per_1k * 1000:.2f}",
+            f"${info.output_cost_per_1k * 1000:.2f}",
+            info.date_retrieved or "N/A",
+            info.confidence,
+        )
+    console.print(table)
+
+
+@pricing_app.command("verify")
+def pricing_verify(
+    model: str = typer.Argument(..., help="Model name to verify"),
+) -> None:
+    """Spot-check pricing and metadata details for a specific model."""
+    info = ModelRegistry.get(model)
+    console.print(f"[bold blue]Model:[/bold blue]           {info.name}")
+    console.print(f"[bold blue]Provider:[/bold blue]        {info.provider}")
+    console.print(f"[bold blue]Context Window:[/bold blue]  {info.context_window:,}")
+    console.print(f"[bold blue]Input $/1M:[/bold blue]      ${info.input_cost_per_1k * 1000:.2f}")
+    console.print(f"[bold blue]Output $/1M:[/bold blue]     ${info.output_cost_per_1k * 1000:.2f}")
+    console.print(f"[bold blue]Source URL:[/bold blue]      {info.source_url or 'N/A'}")
+    console.print(f"[bold blue]Retrieved Date:[/bold blue]  {info.date_retrieved or 'N/A'}")
+    console.print(f"[bold blue]Confidence:[/bold blue]      {info.confidence}")
+
+
+@pricing_app.command("update")
+def pricing_update(
+    remote: bool = typer.Option(False, "--remote", help="Fetch remote pricing registry from GitHub"),
+) -> None:
+    """Update and refresh pricing registry entries."""
+    if remote:
+        from llm_context_forge.pricing_provider import update_pricing_registry
+        console.print("[yellow]Fetching remote pricing registry...[/yellow]")
+        data = update_pricing_registry()
+        console.print(f"[bold green]Updated {len(data)} model pricing definitions from remote registry.[/bold green]")
+    else:
+        ModelRegistry.initialize(force_reload=True)
+        console.print(f"[bold green]Reloaded {len(ModelRegistry.list_models())} models from local pricing registry.[/bold green]")
+
+
 if __name__ == "__main__":
     app()
+

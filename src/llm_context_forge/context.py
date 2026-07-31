@@ -8,12 +8,14 @@ for LLM interactions. Key features:
     highest-priority blocks first.
   - Conversation history auto-trimming that preserves recent messages.
   - Token usage analytics per block and overall.
+  - Async context assembly and streaming context building.
 """
 
 from enum import IntEnum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, AsyncGenerator
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
+import anyio
 
 
 class Priority(IntEnum):
@@ -103,7 +105,7 @@ class ContextWindow:
     def assemble(
         self,
         max_tokens: int = 4096,
-        separator: str = "\\n\\n---\\n\\n",
+        separator: str = "\n\n---\n\n",
     ) -> str:
         """
         Assemble the context window by greedily packing blocks
@@ -134,6 +136,42 @@ class ContextWindow:
                 block.included = False
 
         return separator.join(included_texts)
+
+    async def aassemble(
+        self,
+        max_tokens: int = 4096,
+        separator: str = "\n\n---\n\n",
+    ) -> str:
+        """Async counterpart for assembling context window."""
+        return await anyio.to_thread.run_sync(
+            self.assemble,
+            max_tokens,
+            separator,
+        )
+
+    async def stream_assemble(
+        self,
+        max_tokens: int = 4096,
+    ) -> AsyncGenerator[ContextBlock, None]:
+        """
+        Yield context blocks asynchronously as they are included in priority order.
+
+        Args:
+            max_tokens: Token budget limit.
+
+        Yields:
+            ContextBlock objects included in the context window.
+        """
+        sorted_blocks = sorted(self._blocks, key=lambda b: b.priority)
+        used_tokens = 0
+
+        for block in sorted_blocks:
+            if used_tokens + block.token_count <= max_tokens:
+                block.included = True
+                used_tokens += block.token_count
+                yield block
+            else:
+                block.included = False
 
     def usage(self) -> Dict[str, Any]:
         """
@@ -201,7 +239,7 @@ class ContextWindow:
             List of ``{"role": ..., "content": ...}`` dicts.
         """
         context = self.assemble(max_tokens=max_tokens)
-        full_system = f"{system_prompt}\\n\\n{context}" if context else system_prompt
+        full_system = f"{system_prompt}\n\n{context}" if context else system_prompt
         return [{"role": "system", "content": full_system}]
 
 
@@ -243,11 +281,12 @@ class ConversationManager:
             content:  Message content.
             metadata: Optional metadata (timestamp auto-added).
         """
+        now_str = datetime.now(timezone.utc).isoformat()
         self._messages.append({
             "role": role,
             "content": content,
             "tokens": self._counter.count(content),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": now_str,
             **(metadata or {}),
         })
 
@@ -322,13 +361,3 @@ class ConversationManager:
     def messages(self) -> List[Dict[str, Any]]:
         """Raw message list."""
         return list(self._messages)
-
-
-if __name__ == "__main__":
-    print("LLM Context Forge — Context Window Manager")
-    print("=" * 40)
-    print("Usage:")
-    print("  window = ContextWindow()")
-    print('  window.add_block("System prompt...", Priority.CRITICAL)')
-    print('  window.add_block("User docs...", Priority.HIGH)')
-    print("  assembled = window.assemble(max_tokens=4096)")

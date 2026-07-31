@@ -1,23 +1,30 @@
 # LLM Context Forge Documentation
 
-Welcome to the LLM Context Forge documentation!
+Welcome to the official documentation for **LLM Context Forge** hosted at [docs.dhruvchudasama.me](https://docs.dhruvchudasama.me).
 
-LLM Context Forge is a production-grade LLMOps infrastructure tool designed to help you manage LLM context windows, count tokens accurately, chunk documents intelligently, and estimate API costs before making expensive calls.
+`llm-context-forge` provides production-grade LLMOps infrastructure for context window management, token counting, document chunking, cost estimation, and prompt compression.
 
-## Why LLM Context Forge?
+---
 
-- **Context window exhaustion failures** in production are frustrating and costly.
-- **Inaccurate token counting** leads to unexpected API bills and dropped requests.
-- **Naive document chunking** breaks semantic meaning and degrades LLM reasoning.
-- **No standard tool** exists for complete LLMOps context management.
+## Key Features
 
-## Features
+- 💰 **Pricing Integrity**: Versioned YAML pricing registry (`pricing_registry.yaml`), runtime staleness warnings (>30 days), and local enterprise overrides via `LLM_CONTEXT_FORGE_PRICING_FILE`.
+- 🧩 **Integrations**: Native splitters and transformers for **LangChain** (`ContextForgeTextSplitter`, `ContextForgeDocumentTransformer`) and **LlamaIndex** (`ContextForgeNodeParser`).
+- ⚡ **Async & Streaming**: Full async support (`acount()`, `achunk()`, `aassemble()`) and streaming context block assembly (`stream_assemble()`).
+- 🎯 **Semantic Chunking**: Embedding-based percentile drop algorithm via `sentence-transformers` (`pip install llm-context-forge[semantic]`).
+- 🌐 **Live Remote Pricing**: Remote registry fetch with disk caching and ETag headers.
 
-- **Multi-Provider Token Counter**: Supports OpenAI, Anthropic, Google, Llama, and more.
-- **Smart Document Chunking**: Chunk by paragraph, sentence, fixed tokens, code block, or semantic Markdown headers.
-- **Priority-Based Context Assembly**: Pack your most critical prompts first; optionally drop safe-to-drop blocks.
-- **Context Compression**: Extractive, middle-out, truncate, and map-reduce strategies.
-- **Cost Estimation Engine**: Check your total bill before processing.
-- **REST API + CLI**: First-class support for both programmatic and command-line usage.
+---
 
-See the [Getting Started](getting-started.md) guide to begin.
+## Quick Installation
+
+```bash
+pip install llm-context-forge
+```
+
+For framework integrations and optional extras:
+```bash
+pip install llm-context-forge[semantic,api]
+```
+
+Visit the full documentation sections in the navigation bar to learn more.

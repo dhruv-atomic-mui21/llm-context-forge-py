@@ -82,6 +82,15 @@ class TokenCounter:
 
         return self._count_estimate(text, info.backend)
 
+    async def acount(self, text: str, model: Optional[str] = None) -> int:
+        """
+        Async counterpart for counting tokens in *text*.
+
+        Offloads tokenization work to a worker thread using anyio.
+        """
+        import anyio
+        return await anyio.to_thread.run_sync(self.count, text, model)
+
     def count_batch(self, texts: List[str], model: Optional[str] = None) -> List[int]:
         """Count tokens for multiple texts efficiently"""
         return [self.count(t, model) for t in texts]

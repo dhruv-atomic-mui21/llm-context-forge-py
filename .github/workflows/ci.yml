@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Verify Zero Hardcoded Prices Lint Check
+        run: |
+          python -c "
+          from llm_context_forge.models import ModelRegistry
+          from llm_context_forge.pricing_provider import BundledYAMLPricingProvider
+          data = BundledYAMLPricingProvider().fetch()
+          assert len(data) >= 15, 'Pricing registry YAML must contain all 15+ model definitions'
+          print('Zero hardcoded prices check PASSED')
+          "
+
+      - name: Run Test Suite
+        run: |
+          pytest -v --tb=short

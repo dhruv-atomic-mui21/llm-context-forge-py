@@ -1,0 +1,289 @@
+# LLM Context Forge Versioned Pricing Registry
+# Version: 0.2.0
+
+gpt-4o:
+  provider: openai
+  input_per_1m: 2.50
+  output_per_1m: 10.00
+  cached_input_per_1m: 1.25
+  context_window: 128000
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gpt-4o-mini:
+  provider: openai
+  input_per_1m: 0.15
+  output_per_1m: 0.60
+  cached_input_per_1m: 0.075
+  context_window: 128000
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+o1:
+  provider: openai
+  input_per_1m: 15.00
+  output_per_1m: 60.00
+  cached_input_per_1m: 7.50
+  context_window: 200000
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+o3:
+  provider: openai
+  input_per_1m: 15.00
+  output_per_1m: 60.00
+  cached_input_per_1m: 7.50
+  context_window: 200000
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gpt-4-turbo:
+  provider: openai
+  input_per_1m: 10.00
+  output_per_1m: 30.00
+  cached_input_per_1m: 5.00
+  context_window: 128000
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gpt-3.5-turbo:
+  provider: openai
+  input_per_1m: 0.50
+  output_per_1m: 1.50
+  cached_input_per_1m: 0.25
+  context_window: 16385
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+claude-3-opus:
+  provider: anthropic
+  input_per_1m: 15.00
+  output_per_1m: 75.00
+  cached_input_per_1m: 1.50
+  context_window: 200000
+  source_url: "https://www.anthropic.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+claude-3.5-sonnet:
+  provider: anthropic
+  input_per_1m: 3.00
+  output_per_1m: 15.00
+  cached_input_per_1m: 0.30
+  context_window: 200000
+  source_url: "https://www.anthropic.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+claude-3-haiku:
+  provider: anthropic
+  input_per_1m: 0.25
+  output_per_1m: 1.25
+  cached_input_per_1m: 0.03
+  context_window: 200000
+  source_url: "https://www.anthropic.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+claude-3.5-haiku:
+  provider: anthropic
+  input_per_1m: 1.00
+  output_per_1m: 5.00
+  cached_input_per_1m: 0.10
+  context_window: 200000
+  source_url: "https://www.anthropic.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+claude-sonnet-4-6:
+  provider: anthropic
+  input_per_1m: 3.00
+  output_per_1m: 15.00
+  cached_input_per_1m: 0.30
+  context_window: 200000
+  source_url: "https://www.anthropic.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gemini-1.5-pro:
+  provider: google
+  input_per_1m: 3.50
+  output_per_1m: 10.50
+  cached_input_per_1m: 0.875
+  context_window: 2000000
+  source_url: "https://ai.google.dev/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gemini-1.5-flash:
+  provider: google
+  input_per_1m: 0.075
+  output_per_1m: 0.30
+  cached_input_per_1m: 0.01875
+  context_window: 1000000
+  source_url: "https://ai.google.dev/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gemini-2.0-flash:
+  provider: google
+  input_per_1m: 0.10
+  output_per_1m: 0.40
+  cached_input_per_1m: 0.025
+  context_window: 1000000
+  source_url: "https://ai.google.dev/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+mistral-large:
+  provider: mistral
+  input_per_1m: 3.00
+  output_per_1m: 9.00
+  cached_input_per_1m: 1.50
+  context_window: 128000
+  source_url: "https://mistral.ai/technology/#pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+mistral-8x7b:
+  provider: mistral
+  input_per_1m: 0.60
+  output_per_1m: 0.60
+  cached_input_per_1m: 0.30
+  context_window: 32768
+  source_url: "https://mistral.ai/technology/#pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+command-r-plus:
+  provider: cohere
+  input_per_1m: 2.50
+  output_per_1m: 10.00
+  cached_input_per_1m: 1.25
+  context_window: 128000
+  source_url: "https://cohere.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+llama-3.1-8b-groq:
+  provider: groq
+  input_per_1m: 0.05
+  output_per_1m: 0.08
+  cached_input_per_1m: 0.025
+  context_window: 128000
+  source_url: "https://groq.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+llama-3.1-70b-groq:
+  provider: groq
+  input_per_1m: 0.59
+  output_per_1m: 0.79
+  cached_input_per_1m: 0.30
+  context_window: 128000
+  source_url: "https://groq.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+llama-3.1-8b-together:
+  provider: together
+  input_per_1m: 0.18
+  output_per_1m: 0.18
+  cached_input_per_1m: 0.09
+  context_window: 128000
+  source_url: "https://www.together.ai/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: third-party
+  registry_version: "0.2.0"
+
+llama-3.1-70b-together:
+  provider: together
+  input_per_1m: 0.88
+  output_per_1m: 0.88
+  cached_input_per_1m: 0.44
+  context_window: 128000
+  source_url: "https://www.together.ai/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: third-party
+  registry_version: "0.2.0"
+
+gpt-4:
+  provider: openai
+  input_per_1m: 30.00
+  output_per_1m: 60.00
+  cached_input_per_1m: 15.00
+  context_window: 8192
+  source_url: "https://openai.com/api/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gemini-pro:
+  provider: google
+  input_per_1m: 3.50
+  output_per_1m: 10.50
+  cached_input_per_1m: 0.875
+  context_window: 2000000
+  source_url: "https://ai.google.dev/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+gemini-flash:
+  provider: google
+  input_per_1m: 0.075
+  output_per_1m: 0.30
+  cached_input_per_1m: 0.01875
+  context_window: 1000000
+  source_url: "https://ai.google.dev/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+llama-3-8b:
+  provider: groq
+  input_per_1m: 0.05
+  output_per_1m: 0.08
+  cached_input_per_1m: 0.025
+  context_window: 8192
+  source_url: "https://groq.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+
+llama-3-70b:
+  provider: groq
+  input_per_1m: 0.59
+  output_per_1m: 0.79
+  cached_input_per_1m: 0.30
+  context_window: 8192
+  source_url: "https://groq.com/pricing"
+  date_retrieved: "2026-07-18"
+  confidence: official
+  registry_version: "0.2.0"
+

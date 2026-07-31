@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llm-context-forge"
-version = "0.1.5"
+version = "1.0.0"
 description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
 readme = "README.md"
 license = "MIT"
@@ -18,7 +18,7 @@ keywords = [
     "rag", "prompt-engineering", "openai", "anthropic",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -35,14 +35,16 @@ dependencies = [
     "tiktoken>=0.5.0",
     "typer>=0.9.0",
     "rich>=13.0.0",
+    "pyyaml>=6.0",
+    "anyio>=3.7.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/dhruv-atomic-mui21/llm-context-forge"
 Repository = "https://github.com/dhruv-atomic-mui21/llm-context-forge"
-Documentation = "https://github.com/dhruv-atomic-mui21/llm-context-forge/tree/main/docs"
+Documentation = "https://docs.dhruvchudasama.me"
 "Bug Tracker" = "https://github.com/dhruv-atomic-mui21/llm-context-forge/issues"
-Changelog = "https://github.com/dhruv-atomic-mui21/llm-context-forge/releases"
+Changelog = "https://github.com/dhruv-atomic-mui21/llm-context-forge/blob/main/CHANGELOG.md"
 
 [project.scripts]
 llm-context-forge = "llm_context_forge.cli.main:app"
@@ -58,10 +60,14 @@ api = [
     "uvicorn>=0.21.0",
     "pydantic>=2.0.0",
 ]
+semantic = [
+    "sentence-transformers>=2.2.0",
+]
 dev = [
     "pytest>=7.0",
     "pytest-cov",
     "pytest-benchmark",
+    "pytest-asyncio",
     "ruff",
     "mypy",
     "httpx>=0.24.0",
@@ -98,3 +104,7 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["llm_context_forge*"]
+
+[tool.setuptools.package-data]
+llm_context_forge = ["data/*.yaml"]
+
