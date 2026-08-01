@@ -19,7 +19,7 @@ from llm_context_forge.pricing_provider import (
     update_pricing_registry,
 )
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 __all__ = [
     # Version

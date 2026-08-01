@@ -1,5 +1,10 @@
 # Changelog
 
+
+## [1.0.1] - 2026-08-01
+
+### Updated
+- Automated monthly pricing registry refresh and release.
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
