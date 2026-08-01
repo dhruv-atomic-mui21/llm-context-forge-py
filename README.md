@@ -1,171 +1,100 @@
 <div align="center">
   <h1>LLM Context Forge</h1>
-  <p><b>Production-Grade LLMOps Infrastructure for Context Window Management</b></p>
-  <p><i>Token counting · Intelligent chunking · Priority context assembly · Pricing Integrity · Framework Integrations</i></p>
+  <p><b>Production-Grade Context Window Infrastructure for LLM Applications</b></p>
+  <p><i>Token counting · Intelligent chunking · Priority context assembly · Cost estimation · Framework integrations</i></p>
 
-  [![Documentation](https://img.shields.io/badge/docs-docs.dhruvchudasama.me-blue.svg)](https://docs.dhruvchudasama.me)
-  [![PyPI](https://img.shields.io/pypi/v/llm-context-forge.svg)](https://pypi.org/project/llm-context-forge/)
-  [![Python](https://img.shields.io/pypi/pyversions/llm-context-forge.svg)](https://pypi.org/project/llm-context-forge/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+  [![PyPI](https://img.shields.io/pypi/v/llm-context-forge.svg?style=flat-square&color=e63946)](https://pypi.org/project/llm-context-forge/)
+  [![npm](https://img.shields.io/npm/v/llm-context-forge.svg?style=flat-square&color=e63946)](https://www.npmjs.com/package/llm-context-forge)
+  [![Documentation](https://img.shields.io/badge/docs-docs.dhruvchudasama.me-blue.svg?style=flat-square)](https://docs.dhruvchudasama.me)
+  [![Velox Ecosystem](https://img.shields.io/badge/site-velox.satyaneev.me-emerald.svg?style=flat-square)](https://velox.satyaneev.me)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 </div>
 
 ---
 
-> **Official Documentation**: Visit [docs.dhruvchudasama.me](https://docs.dhruvchudasama.me) for comprehensive guides, API references, change records, and architecture tutorials.
+> **Production-grade context window management: token counting, chunking, compression, and priority context packing for LLM apps.**
+>
+> 📌 **Official Documentation Hub**: [docs.dhruvchudasama.me](https://docs.dhruvchudasama.me)  
+> ⚡ **PyPI Package**: [pypi.org/project/llm-context-forge](https://pypi.org/project/llm-context-forge/)  
+> 🔗 **Product Suite**: [velox.satyaneev.me](https://velox.satyaneev.me)
 
 ---
 
-## Why LLM Context Forge?
+## When to use `llm-context-forge` vs Alternatives
 
-Every production AI application hits the same infrastructure challenges:
+Most developers start with raw token counters or naive chunking until prompts drop silently or context limits crash their API calls in production:
 
-| Problem | Impact | LLM Context Forge Solution |
-|---|---|---|
-| Context window overflow | Silent failures, truncated responses | Priority-based assembly with overflow tracking & streaming |
-| Inaccurate token counting | Budget overruns, dropped requests | Benchmark-verified token counting across 20+ models |
-| Hardcoded stale pricing | Embarrassing cost miscalculations | Versioned YAML pricing registry (`pricing_registry.yaml`) with staleness warnings |
-| Framework isolation | Custom rewrite for LangChain/LlamaIndex | First-class LangChain & LlamaIndex integrations |
-| Sync-only pipelines | Thread blocking in FastAPI/async apps | Native async API (`acount`, `achunk`, `aassemble`, `stream_assemble`) |
+| Scenario | Raw `tiktoken` / Naive `len(text)//4` | LangChain / LlamaIndex Defaults | `llm-context-forge` |
+|---|---|---|---|
+| **Token Accuracy** | `len()/4` is off by 15–30%; `tiktoken` lacks model wrappers | Requires heavy dependencies & specific abstractions | **Deterministic exact counting** across OpenAI, Claude, Gemini, & Llama |
+| **Context Assembly** | Hardcoded array slices; system prompts get trimmed | Truncates arbitrarily without priority awareness | **Priority packing** (CRITICAL → HIGH → MEDIUM → LOW); system prompt always preserved |
+| **Chunking Strategy** | Fixed character splits break sentences & code blocks | Basic recursive splitters without semantic boundary detection | **5 Smart Strategies** (Sentence, Paragraph, Semantic, Code, Fixed) |
+| **Pricing Integrity** | Hardcoded stale prices in python code | No built-in cost verification | **Versioned pricing registry** with staleness warnings & local overrides |
+| **Async & Streaming** | Sync-only thread blocking | Complex async setups | Native `acount`, `achunk`, `aassemble`, and `stream_assemble` |
 
 ---
 
-## Installation
+## 30-Second Quickstart (Copy & Paste)
 
 ```bash
 pip install llm-context-forge
 ```
 
-With optional extras:
-```bash
-# True embedding-based semantic chunking
-pip install "llm-context-forge[semantic]"
-
-# FastAPI REST server
-pip install "llm-context-forge[api]"
-```
-
----
-
-## Quick Start
-
-### 1. Pricing Integrity & Verified Rates
-
-Zero hardcoded prices in Python code. All rates are loaded from `pricing_registry.yaml` with source citations and 30-day staleness warnings:
-
 ```python
-from llm_context_forge import ModelRegistry, CostCalculator
+from llm_context_forge import ContextWindow, Priority, TokenCounter
 
-# Lookup model info with source URL and verification date
-info = ModelRegistry.get("gpt-4o")
-print(f"Provider: {info.provider} | Input $/1M: ${info.input_cost_per_1k * 1000:.2f}")
+# 1. Exact token counting
+counter = TokenCounter("gpt-4o")
+print(f"Exact tokens: {counter.count('Production prompt here...')}")
 
-# Local enterprise pricing override via environment variable:
-# export LLM_CONTEXT_FORGE_PRICING_FILE=/path/to/my_pricing.yaml
-```
-
-### 2. LangChain & LlamaIndex Integrations
-
-```python
-# LangChain TextSplitter & DocumentTransformer
-from llm_context_forge.integrations.langchain import ContextForgeTextSplitter, ContextForgeDocumentTransformer
-
-splitter = ContextForgeTextSplitter(model="gpt-4o", max_tokens=500)
-chunks = splitter.split_text("Your document text...")
-
-transformer = ContextForgeDocumentTransformer(model="gpt-4o")
-async_docs = await transformer.atransform_documents(langchain_documents)
-
-# LlamaIndex MetadataAware NodeParser
-from llm_context_forge.integrations.llamaindex import ContextForgeNodeParser
-
-parser = ContextForgeNodeParser(max_tokens=500)
-nodes = parser.split_text_metadata_aware("def foo(): pass", metadata_str="file_type: python code")
-```
-
-### 3. Async & Streaming Context Assembly
-
-```python
-from llm_context_forge import ContextWindow, Priority
-
+# 2. Priority-based context packing (Prevents context overflow)
 window = ContextWindow("gpt-4o")
-window.add_block("System instructions...", Priority.CRITICAL, "system")
-window.add_block("User query...", Priority.HIGH, "query")
-window.add_block("RAG context chunk...", Priority.MEDIUM, "rag_1")
+window.add_block("System: You are an expert AI software engineer.", Priority.CRITICAL, "system")
+window.add_block("User query: Refactor this database schema", Priority.HIGH, "query")
+window.add_block("RAG chunk 1...", Priority.MEDIUM, "rag_doc_1")
+window.add_block("RAG chunk 2...", Priority.LOW, "rag_doc_2")
 
-# Async assembly
-prompt = await window.aassemble(max_tokens=4096)
-
-# Streaming context assembly block-by-block
-async for block in window.stream_assemble(max_tokens=4096):
-    print(f"Included: {block.label} ({block.token_count} tokens)")
-```
-
-### 4. True Semantic Chunking
-
-Using Greg Kamradt's percentile-based sentence similarity drop algorithm:
-
-```python
-from llm_context_forge import DocumentChunker, ChunkStrategy
-
-chunker = DocumentChunker("gpt-4o")
-chunks = chunker.chunk(
-    long_text,
-    strategy=ChunkStrategy.SEMANTIC,
-    semantic_threshold_percentile=95,
-    embedding_model="all-MiniLM-L6-v2"
-)
+# Assemble safely under token budget
+prompt = window.assemble(max_tokens=4096)
+stats = window.usage()
+print(f"Tokens used: {stats.tokens_used} | Excluded lower-priority blocks: {stats.excluded}")
 ```
 
 ---
 
-## Token Counting Accuracy Benchmark
+## Features & Ecosystem Integrations
 
-Verified across 60 test documents against official model API counts:
-
-| Category | Test Docs | Models Tested | Error Rate | Status |
-|---|---|---|---|---|
-| English Prose | 20 docs | gpt-4o, claude-3.5-sonnet, gemini-1.5-pro | <0.1% | Verified |
-| Code (Python/JS/SQL) | 20 docs | gpt-4o, claude-3.5-sonnet, gemini-1.5-pro | <0.2% | Verified |
-| Non-English Text | 10 docs | gpt-4o, claude-3.5-sonnet, gemini-1.5-pro | <1.5% | Verified |
-| Special Characters | 10 docs | gpt-4o, claude-3.5-sonnet, gemini-1.5-pro | <1.8% | Verified |
-
----
-
-## Roadmap & Release Milestones
-
-| Version | Theme | Key Deliverables | Status |
-|---|---|---|---|
-| **0.1.5** | Core Engine | Token counting, 5 chunking strategies, priority context, CLI | Shipped |
-| **0.2.0** | Pricing Integrity | Versioned YAML registry, staleness warnings, env override | Shipped |
-| **0.3.0** | Framework Integrations | LangChain & LlamaIndex splitters, CLI pricing suite | Shipped |
-| **0.4.0** | Live Pricing & Accuracy | Remote pricing registry fetch, plugin loaders, true semantic chunking | Shipped |
-| **0.5.0** | Async & Performance | Async API (`acount`, `achunk`, `aassemble`), streaming context | Shipped |
-| **1.0.0** | Production Milestone | Docs site at [docs.dhruvchudasama.me](https://docs.dhruvchudasama.me), automated release system | Shipped |
-
----
-
-## CLI Tools
+* **LangChain Integration**: `ContextForgeTextSplitter` and `ContextForgeDocumentTransformer`
+* **LlamaIndex Integration**: Metadata-aware `ContextForgeNodeParser`
+* **True Semantic Chunking**: Percentile-based sentence embedding drop algorithm
+* **CLI Suite**: Command-line token counting, pricing checks, and REST API server (`llm-context-forge serve`)
 
 ```bash
-# Count tokens
-llm-context-forge count "Hello world" --model gpt-4o
+# Count tokens instantly from CLI
+llm-context-forge count "Hello world prompt" --model gpt-4o
 
-# Manage and verify pricing
-llm-context-forge pricing list
+# Verify pricing registry
 llm-context-forge pricing verify gpt-4o
-llm-context-forge pricing update --remote
-
-# Start REST server
-llm-context-forge serve --port 8000
 ```
 
 ---
 
-## Documentation
+## Production Notes & Safety Multipliers
 
-Full documentation, tutorial guides, change logs, and API specifications are hosted at:
-[https://docs.dhruvchudasama.me](https://docs.dhruvchudasama.me)
+* **Safety Buffer Multiplier**: Default 5% safety margin on context windows prevents edge-case token overflow on non-ASCII characters or tool definitions.
+* **Overflow Telemetry**: Emits structured log warnings when lower-priority blocks are dropped, ensuring your observability stack catches context budget exhaustion.
+* **Pricing Staleness Guarantee**: Automatically alerts developers if pricing data hasn't been refreshed in over 30 days.
+
+---
+
+## Links & Ecosystem
+
+* 📖 **Docs Site**: [docs.dhruvchudasama.me](https://docs.dhruvchudasama.me)
+* 📦 **PyPI**: [pypi.org/project/llm-context-forge/](https://pypi.org/project/llm-context-forge/)
+* ⚡ **Velox Site**: [velox.satyaneev.me](https://velox.satyaneev.me)
+* 🐛 **Issue Tracker**: [GitHub Issues](https://github.com/dhruv-atomic-mui21/llm-context-forge/issues)
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+[MIT](LICENSE) © Dhruv Chudasama
+

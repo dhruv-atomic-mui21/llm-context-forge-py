@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-context-forge"
 version = "1.0.0"
-description = "Production-grade LLMOps infrastructure for context window management, token counting, document chunking, and compression"
+description = "Production-grade context window management: token counting, chunking, compression, and priority context assembly for LLM applications."
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -17,6 +17,7 @@ keywords = [
     "llm", "tokens", "tokenizer", "chunking",
     "context-window", "context-management", "llmops",
     "rag", "prompt-engineering", "openai", "anthropic",
+    "token-overflow-protection", "tiktoken", "langchain-splitter"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
