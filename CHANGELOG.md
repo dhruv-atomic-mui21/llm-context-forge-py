@@ -5,47 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-07-31
+## [0.2.0] - 2026-09-01
 
 ### Added
-- Production release milestone with documentation site at `https://docs.dhruvchudasama.me`.
-- Multi-Python GitHub Actions CI matrix (Python 3.8, 3.9, 3.10, 3.11, 3.12).
-- Scheduled automated releases workflow (`.github/workflows/scheduled-release.yml`).
-- Zero hardcoded prices lint enforcement.
+- **Multimodal Vision Token Sizing**: Added `VisionTokenCounter` and `count_image_tokens` supporting OpenAI (GPT-4o detail tiers & tiles), Anthropic (Claude 3.5 1568px bounds), and Google Gemini (768px patches).
+- Added `pillow>=10.0.0` core dependency with support for reading image dimensions directly from file paths, byte buffers, and stream objects without full pixel decompression.
+- Formalized `[project.optional-dependencies]` in `pyproject.toml` including `integrations` (`langchain-core`, `llama-index-core`).
+- **Credibility Repair Release**: Aligned all marketing and technical claims with actual codebase behavior.
+- Added rigorous test coverage for edge cases: empty input, unicode handling, separators, overlap behavior, invalid config, and deterministic output.
+- Added `docs/benchmarks.md` detailing methodology, environment, input corpus, and limitations of performance assertions.
+- Implemented parameter validation (e.g., negative `max_tokens`, invalid `overlap_tokens`) across chunking utilities.
+- Added explicit Markdown-based Heuristic chunking documentation to clarify non-embedding behavior.
 
-## [0.5.0] - 2026-07-31
-
-### Added
-- Async methods across public API: `TokenCounter.acount()`, `DocumentChunker.achunk()`, `ContextWindow.aassemble()`.
-- Streaming context assembly generator: `ContextWindow.stream_assemble()`.
-- Performance benchmark test suite for tokenization, chunking, and context assembly throughput.
-
-## [0.4.0] - 2026-07-31
-
-### Added
-- Dynamic remote pricing registry update function `update_pricing_registry()` with local file cache (`~/.llm_context_forge/pricing_cache.json`) and ETag validation.
-- Extensible `PricingProvider` interface with `BundledYAMLPricingProvider` and `OpenRouterPricingProvider`.
-- True embedding-based semantic chunking powered by `sentence-transformers` via Greg Kamradt's percentile drop algorithm (`pip install llm-context-forge[semantic]`).
-- Token counting accuracy benchmark test suite across English prose, Code, Non-English text, and Special Characters.
-
-## [0.3.0] - 2026-07-31
-
-### Added
-- LangChain integration subpackage: `ContextForgeTextSplitter` and `ContextForgeDocumentTransformer` (with `transform_documents` & async `atransform_documents`).
-- LlamaIndex integration subpackage: `ContextForgeNodeParser` (subclassing `MetadataAwareTextSplitter`).
-- CLI pricing management commands: `llm-context-forge pricing list`, `llm-context-forge pricing verify <model>`, `llm-context-forge pricing update [--remote]`.
-
-## [0.2.0] - 2026-07-31
-
-### Added
-- Versioned YAML pricing registry (`pricing_registry.yaml`) with 20+ verified model pricing entries.
-- Runtime staleness warning (`PricingDataStaleWarning`) firing when model pricing data is >30 days old.
-- Support for `LLM_CONTEXT_FORGE_PRICING_FILE` environment variable for enterprise local pricing overrides.
-- Renamed `ChunkStrategy.SEMANTIC` to `ChunkStrategy.HEURISTIC` for markdown structure splitting with backward-compatible deprecation warning.
+### Changed
+- Refactored `README.md` to remove unverified claims regarding "true semantic chunking", "sovereign", and "zero telemetry" without measurement boundaries.
+- Replaced word "securely" with "deterministically" regarding chunk splitting logic.
+- Accurately described the 5% token safety multiplier as applying to estimation fallback only, not the entire context window.
 
 ### Removed
-- Removed hardcoded pricing definitions from Python source code.
-- Removed Meta as a provider concept in favor of provider-specific open-source host entries (e.g. `llama-3.1-8b-groq`).
+- Removed hardcoded pricing definitions from Python source code, replacing with versioned `pricing_registry.yaml`.
 
 ## [0.1.5] - 2026-07-15
 

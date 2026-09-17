@@ -29,7 +29,7 @@ def test_benchmark_chunker(request):
     chunker = DocumentChunker("gpt-4o")
     
     def chunk_doc():
-        return chunker.chunk(LONG_TEXT, ChunkStrategy.SENTENCE, max_tokens=50)
+        return chunker.chunk(LONG_TEXT, ChunkStrategy.SENTENCE, max_tokens=50, overlap_tokens=0)
 
     if "benchmark" in request.fixturenames:
         benchmark = request.getfixturevalue("benchmark")

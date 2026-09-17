@@ -19,7 +19,9 @@ from llm_context_forge.pricing_provider import (
     update_pricing_registry,
 )
 
-__version__ = "1.0.0"
+from llm_context_forge.vision import VisionTokenCounter, count_image_tokens
+
+__version__ = "0.2.0"
 
 __all__ = [
     # Version
@@ -33,8 +35,10 @@ __all__ = [
     "BundledYAMLPricingProvider",
     "OpenRouterPricingProvider",
     "update_pricing_registry",
-    # Tokenizer
+    # Tokenizer & Vision
     "TokenCounter",
+    "VisionTokenCounter",
+    "count_image_tokens",
     # Chunker
     "DocumentChunker",
     "ChunkStrategy",

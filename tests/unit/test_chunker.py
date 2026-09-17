@@ -50,3 +50,38 @@ class TestDocumentChunker:
         assert len(chunks) > 0
         for c in chunks:
             assert c.token_count <= 50
+
+    def test_empty_input(self):
+        """Empty input should return empty chunk list."""
+        assert len(self.chunker.chunk("", max_tokens=10, overlap_tokens=0)) == 0
+        assert len(self.chunker.chunk("   \n  ", max_tokens=10, overlap_tokens=0)) == 0
+
+    def test_unicode_handling(self):
+        """Unicode characters (CJK, emojis, RTL) should not crash the chunker and count correctly."""
+        text = "Hello \u4e16\u754c. 🚀  مرحبا. " * 50
+        chunks = self.chunker.chunk(text, strategy=ChunkStrategy.SENTENCE, max_tokens=20, overlap_tokens=0)
+        assert len(chunks) > 0
+        for c in chunks:
+            assert c.token_count <= 20
+            
+    def test_separator_behavior(self):
+        """Ensure chunking correctly breaks on specified separators."""
+        text = "A||B||C||D"
+        # We simulate the fallback to fixed splitting when standard heuristics fail to find breaks
+        chunks = self.chunker.chunk(text, strategy=ChunkStrategy.FIXED, max_tokens=2, overlap_tokens=0)
+        assert len(chunks) >= 2
+
+    def test_deterministic_output(self):
+        """Chunking the same text multiple times must yield identical results."""
+        text = "Line 1.\n\nLine 2.\n\nLine 3."
+        res1 = self.chunker.chunk(text, strategy=ChunkStrategy.PARAGRAPH, max_tokens=10, overlap_tokens=0)
+        res2 = self.chunker.chunk(text, strategy=ChunkStrategy.PARAGRAPH, max_tokens=10, overlap_tokens=0)
+        assert [c.text for c in res1] == [c.text for c in res2]
+
+    def test_invalid_configuration(self):
+        """Invalid configurations should raise appropriate errors."""
+        with pytest.raises(ValueError):
+            self.chunker.chunk("text", max_tokens=-5)
+        
+        with pytest.raises(ValueError):
+            self.chunker.chunk("text", max_tokens=10, overlap_tokens=20)

@@ -26,9 +26,9 @@ Most developers start with raw token counters or naive chunking until prompts dr
 
 | Scenario | Raw `tiktoken` / Naive `len(text)//4` | LangChain / LlamaIndex Defaults | `llm-context-forge` |
 |---|---|---|---|
-| **Token Accuracy** | `len()/4` is off by 15–30%; `tiktoken` lacks model wrappers | Requires heavy dependencies & specific abstractions | **Deterministic exact counting** across OpenAI, Claude, Gemini, & Llama |
-| **Context Assembly** | Hardcoded array slices; system prompts get trimmed | Truncates arbitrarily without priority awareness | **Priority packing** (CRITICAL → HIGH → MEDIUM → LOW); system prompt always preserved |
-| **Chunking Strategy** | Fixed character splits break sentences & code blocks | Basic recursive splitters without semantic boundary detection | **5 Smart Strategies** (Sentence, Paragraph, Semantic, Code, Fixed) |
+| **Token Accuracy** | `len()/4` is off by 15-30%; `tiktoken` lacks model wrappers | Requires heavy dependencies & specific abstractions | **Deterministic exact counting** across OpenAI, Claude, Gemini, & Llama |
+| **Context Assembly** | Hardcoded array slices; system prompts get trimmed | Truncates arbitrarily without priority awareness | **Priority packing** (CRITICAL -> HIGH -> MEDIUM -> LOW); system prompt always preserved |
+| **Chunking Strategy** | Fixed character splits break sentences & code blocks | Basic recursive splitters without structural boundaries | **5 Smart Strategies** (Sentence, Paragraph, Markdown Heuristic, Code, Fixed) |
 | **Pricing Integrity** | Hardcoded stale prices in python code | No built-in cost verification | **Versioned pricing registry** with staleness warnings & local overrides |
 | **Async & Streaming** | Sync-only thread blocking | Complex async setups | Native `acount`, `achunk`, `aassemble`, and `stream_assemble` |
 
@@ -66,7 +66,7 @@ print(f"Tokens used: {stats.tokens_used} | Excluded lower-priority blocks: {stat
 
 * **LangChain Integration**: `ContextForgeTextSplitter` and `ContextForgeDocumentTransformer`
 * **LlamaIndex Integration**: Metadata-aware `ContextForgeNodeParser`
-* **True Semantic Chunking**: Percentile-based sentence embedding drop algorithm
+* **Heuristic Markdown Chunking**: Splits deterministically on Markdown heading boundaries. (Embedding-based semantic chunking is available via `pip install llm-context-forge[semantic]`).
 * **CLI Suite**: Command-line token counting, pricing checks, and REST API server (`llm-context-forge serve`)
 
 ```bash
@@ -81,7 +81,7 @@ llm-context-forge pricing verify gpt-4o
 
 ## Production Notes & Safety Multipliers
 
-* **Safety Buffer Multiplier**: Default 5% safety margin on context windows prevents edge-case token overflow on non-ASCII characters or tool definitions.
+* **Estimation Safety Multipliers**: When using unknown models, fallback counting applies a conservative 5% token safety multiplier to prevent accidental context overflow.
 * **Overflow Telemetry**: Emits structured log warnings when lower-priority blocks are dropped, ensuring your observability stack catches context budget exhaustion.
 * **Pricing Staleness Guarantee**: Automatically alerts developers if pricing data hasn't been refreshed in over 30 days.
 

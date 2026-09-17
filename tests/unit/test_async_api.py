@@ -19,7 +19,7 @@ async def test_async_token_counter():
 async def test_async_document_chunker():
     chunker = DocumentChunker("gpt-4o")
     text = "Line 1.\n\nLine 2.\n\nLine 3."
-    chunks = await chunker.achunk(text, strategy=ChunkStrategy.PARAGRAPH, max_tokens=10)
+    chunks = await chunker.achunk(text, strategy=ChunkStrategy.PARAGRAPH, max_tokens=10, overlap_tokens=0)
     assert len(chunks) >= 1
 
 

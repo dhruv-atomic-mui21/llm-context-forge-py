@@ -101,6 +101,11 @@ class DocumentChunker:
         Returns:
             List of Chunk objects.
         """
+        if max_tokens <= 0:
+            raise ValueError("max_tokens must be strictly positive.")
+        if overlap_tokens < 0 or overlap_tokens >= max_tokens:
+            raise ValueError("overlap_tokens must be >= 0 and < max_tokens.")
+            
         if not text or not text.strip():
             return []
 
@@ -165,6 +170,9 @@ class DocumentChunker:
         """
         Chunk source code respecting function/class boundaries.
         """
+        if max_tokens <= 0:
+            raise ValueError("max_tokens must be strictly positive.")
+            
         blocks = self._split_code_blocks(code, language)
         return self._assemble_chunks(blocks, max_tokens, overlap_tokens=0)
 

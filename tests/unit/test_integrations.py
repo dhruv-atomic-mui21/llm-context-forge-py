@@ -9,7 +9,7 @@ from llm_context_forge.chunker import ChunkStrategy
 
 
 def test_langchain_text_splitter():
-    splitter = ContextForgeTextSplitter(model="gpt-4o", strategy=ChunkStrategy.PARAGRAPH, max_tokens=20)
+    splitter = ContextForgeTextSplitter(model="gpt-4o", strategy=ChunkStrategy.PARAGRAPH, max_tokens=20, overlap_tokens=0)
     text = "Paragraph 1 is here.\n\nParagraph 2 is over here.\n\nParagraph 3 is also here."
     chunks = splitter.split_text(text)
     assert isinstance(chunks, list)
@@ -18,7 +18,7 @@ def test_langchain_text_splitter():
 
 @pytest.mark.asyncio
 async def test_langchain_document_transformer():
-    transformer = ContextForgeDocumentTransformer(model="gpt-4o", max_tokens=20)
+    transformer = ContextForgeDocumentTransformer(model="gpt-4o", max_tokens=20, overlap_tokens=0)
 
     class DummyDoc:
         def __init__(self, content):
@@ -35,7 +35,7 @@ async def test_langchain_document_transformer():
 
 
 def test_llamaindex_node_parser():
-    parser = ContextForgeNodeParser(max_tokens=30)
+    parser = ContextForgeNodeParser(max_tokens=30, overlap_tokens=0)
     code_text = "def hello():\n    print('world')\n\ndef foo():\n    return 42"
     chunks = parser.split_text_metadata_aware(code_text, "file_type: python code")
     assert isinstance(chunks, list)
